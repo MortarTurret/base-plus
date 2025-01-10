@@ -16,15 +16,16 @@ $FlagSlot=2;
 $DefaultSlot=3;
 
 // Limit on number of special Items you can buy
-$TeamItemMax[DeployableAmmoPack] = 7;
-$TeamItemMax[DeployableInvPack] = 5;
-$TeamItemMax[TurretPack] = 10;
+$TeamItemMax[DeployableAmmoPack] = 10;
+$TeamItemMax[DeployableInvPack] = 10;
+$TeamItemMax[TurretPack] = 8;
+$TeamItemMax[HeavyTurretPack] = 2;
 $TeamItemMax[CameraPack] = 15;
-$TeamItemMax[DeployableSensorJammerPack] = 8;
+$TeamItemMax[DeployableSensorJammerPack] = 10;
 $TeamItemMax[PulseSensorPack] = 15;
 $TeamItemMax[MotionSensorPack] = 15;
-$TeamItemMax[ScoutVehicle] = 3;
-$TeamItemMax[HAPCVehicle] = 1;
+$TeamItemMax[ScoutVehicle] = 4;
+$TeamItemMax[HAPCVehicle] = 2;
 $TeamItemMax[LAPCVehicle] = 2;
 $TeamItemMax[Beacon] = 40;
 $TeamItemMax[mineammo] = 35;
@@ -544,13 +545,8 @@ function Item::onCollision(%this,%object)
 //----------------------------------------------------------------------------
 // Default Inventory methods
 
-function Item::onMount(%player,%item)
-{
-}
-
-function Item::onUnmount(%player,%item)
-{
-}
+function Item::onMount(%player,%item){}
+function Item::onUnmount(%player,%item){}
 
 function Item::onUse(%player,%item)
 {
@@ -586,12 +582,8 @@ function Item::onDrop(%player,%item)
 
 function Item::onDeploy(%player,%item,%pos)
 {
+  
 }
-
-
-
-
-
 
 //----------------------------------------------------------------------------
 // Tools, Weapons & ammo
@@ -708,38 +700,51 @@ function Backpack::onUse(%player,%item)
 function Item::deployShape(%player,%name,%shape,%item)
 {
 	%client = Player::getClient(%player);
+
 	if($TeamItemCount[GameBase::getTeam(%player) @ %item] < $TeamItemMax[%item]) {
 		if (GameBase::getLOSInfo(%player,3)) {
 			// GetLOSInfo sets the following globals:
 			// 	los::position
 			// 	los::normal
 			// 	los::object
+
 			%obj = getObjectType($los::object);
+
 			if (%obj == "SimTerrain" || %obj == "InteriorShape") {
 				if (Vector::dot($los::normal,"0 0 1") > 0.7) {
 					if(checkDeployArea(%client,$los::position)) {
 						%sensor = newObject("","Sensor",%shape,true);
- 	        	   	addToSet("MissionCleanup", %sensor);
+
+            addToSet("MissionCleanup", %sensor);
+
 						GameBase::setTeam(%sensor,GameBase::getTeam(%player));
 						GameBase::setPosition(%sensor,$los::position);
 						Gamebase::setMapName(%sensor,%name);
 						Client::sendMessage(%client,0,%item.description @ " deployed");
+
 						playSound(SoundPickupBackpack,$los::position);
+
 						echo("MSG: ",%client," deployed a ",%name);
+
 						return true;
 					}
 				}
+
 				else 
 					Client::sendMessage(%client,0,"Can only deploy on flat surfaces");
 			}
+
 			else 
 				Client::sendMessage(%client,0,"Can only deploy on terrain or buildings");
 		}
+
 		else 
 			Client::sendMessage(%client,0,"Deploy position out of range");
 	}
+
 	else
 	 	Client::sendMessage(%client,0,"Deployable Item limit reached for " @ %name @ "s");
+
 	return false;
 }
 
@@ -769,13 +774,14 @@ function remoteGiveAll(%clientId)
 		Player::setItemCount(%clientId,DiscAmmo,200);
 		Player::setItemCount(%clientId,MortarAmmo,200);
 
-      Player::setItemCount(%clientId,Grenade, 200);
-      Player::setItemCount(%clientId,MineAmmo, 200);
+    Player::setItemCount(%clientId,Grenade, 200);
+    Player::setItemCount(%clientId,MineAmmo, 200);
 		Player::setItemCount(%clientId,Beacon,  200);
 
 		Player::setItemCount(%clientId,RepairKit,200);
 	}
-	else if($ServerCheats) {
+	
+  else if($ServerCheats) {
 		%armor = Player::getArmor(%clientId);
 		Player::setItemCount(%clientId,BulletAmmo,$ItemMax[%armor, BulletAmmo]);
 		Player::setItemCount(%clientId,PlasmaAmmo,$ItemMax[%armor, PlasmaAmmo]);
@@ -783,8 +789,8 @@ function remoteGiveAll(%clientId)
 		Player::setItemCount(%clientId,DiscAmmo,$ItemMax[%armor, DiscAmmo]);
 		Player::setItemCount(%clientId,MortarAmmo,$ItemMax[%armor, MortarAmmo]);
 
-      Player::setItemCount(%clientId,Grenade, $ItemMax[%armor, Grenade]);
-      Player::setItemCount(%clientId,MineAmmo,$ItemMax[%armor, MineAmmo]);
+    Player::setItemCount(%clientId,Grenade, $ItemMax[%armor, Grenade]);
+    Player::setItemCount(%clientId,MineAmmo,$ItemMax[%armor, MineAmmo]);
 		Player::setItemCount(%clientId,Beacon,$ItemMax[%armor, Beacon]);
 
 		Player::setItemCount(%clientId,RepairKit,1);
@@ -948,6 +954,7 @@ function Mission::reinitData()
 
 	$totalNumCameras = 0;
 	$totalNumTurrets = 0;
+	$totalNumHeavyTurrets = 0;
 
 	for(%i = -1; %i < 8 ; %i++)
 		$TeamEnergy[%i] = $DefaultTeamEnergy; 

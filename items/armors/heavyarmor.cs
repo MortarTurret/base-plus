@@ -1,33 +1,41 @@
 $ArmorType[Female, HeavyArmor] = harmor;
 $ArmorType[Male, HeavyArmor] = harmor;
 $ArmorName[harmor] = HeavyArmor;
+$ArmorPrice[harmor] = $ArmorPrice[larmor] * 2;
+$MaxEnergy[harmor] = $MaxEnergy[larmor] * 2;
+$MaxWeapons[harmor] = $MaxWeapons[larmor] + 2;
+
+//----------------------------------------------------------------------------
+// Armors
+//----------------------------------------------------------------------------
 
 ItemData HeavyArmor
 {
-   heading = "aArmor";
+  heading = "aArmor";
 	description = "Heavy Armor";
 	className = "Armor";
-	price = 400;
+	price = $ArmorPrice[harmor];
 };
 
 //----------------------------------------------------------------------------
 // Heavy Armor
 //----------------------------------------------------------------------------
-$DamageScale[harmor, $LandingDamageType] = 1.2;
-$DamageScale[harmor, $ImpactDamageType] = 0.8;
-$DamageScale[harmor, $CrushDamageType] = 0.6;
-$DamageScale[harmor, $ChaingunDamageType] = 0.7;
-$DamageScale[harmor, $PlasmaDamageType] = 0.6;
-$DamageScale[harmor, $TurretDamageType] = 0.6;
-$DamageScale[harmor, $DiscDamageType] = 0.4;
-$DamageScale[harmor, $RocketDamageType] = 0.6;
-$DamageScale[harmor, $DebrisDamageType] = 0.8;
-$DamageScale[harmor, $GrenadeDamageType] = 0.8;
-$DamageScale[harmor, $LaserDamageType] = 0.6;
-$DamageScale[harmor, $MortarDamageType] = 0.7;
+
 $DamageScale[harmor, $BlasterDamageType] = 0.7;
+$DamageScale[harmor, $ChaingunDamageType] = 0.7;
+$DamageScale[harmor, $CrushDamageType] = 0.6;
+$DamageScale[harmor, $DebrisDamageType] = 0.8;
+$DamageScale[harmor, $DiscDamageType] = 0.4;
 $DamageScale[harmor, $ELFDamageType] = 1.2;
+$DamageScale[harmor, $GrenadeDamageType] = 0.8;
+$DamageScale[harmor, $ImpactDamageType] = 0.8;
+$DamageScale[harmor, $LandingDamageType] = 1.0;
+$DamageScale[harmor, $LaserDamageType] = 0.6;
 $DamageScale[harmor, $MineDamageType] = 0.8;
+$DamageScale[harmor, $MortarDamageType] = 0.7;
+$DamageScale[harmor, $PlasmaDamageType] = 0.6;
+$DamageScale[harmor, $RocketDamageType] = 0.6;
+$DamageScale[harmor, $TurretDamageType] = 0.6;
 
 $ItemMax[harmor, Blaster] = 1;
 $ItemMax[harmor, Chaingun] = 1;
@@ -35,38 +43,35 @@ $ItemMax[harmor, Disclauncher] = 1;
 $ItemMax[harmor, GrenadeLauncher] = 1;
 $ItemMax[harmor, Mortar] = 1;
 $ItemMax[harmor, PlasmaGun] = 1;
+$ItemMax[harmor, FlameThrower] = 0;
 $ItemMax[harmor, LaserRifle] = 0;
 $ItemMax[harmor, EnergyRifle] = 1;
 $ItemMax[harmor, TargetingLaser] = 1;
-$ItemMax[harmor, MineAmmo] = 3;
-$ItemMax[harmor, Grenade] = 8;
-$ItemMax[harmor, Beacon] = 3;
+$ItemMax[harmor, MineAmmo] = 4;
+$ItemMax[harmor, Grenade] = 4;
+$ItemMax[harmor, Beacon] = 4;
 
-$ItemMax[harmor, BulletAmmo] = 200;
-$ItemMax[harmor, PlasmaAmmo] = 50;
-$ItemMax[harmor, DiscAmmo] = 15;
-$ItemMax[harmor, GrenadeAmmo] = 15;
-$ItemMax[harmor, MortarAmmo] = 10;
+$ItemMax[harmor, BulletAmmo] = 400;
+$ItemMax[harmor, PlasmaAmmo] = 60;
+$ItemMax[harmor, DiscAmmo] = 20;
+$ItemMax[harmor, GrenadeAmmo] = 20;
+$ItemMax[harmor, MortarAmmo] = 15;
 
 $ItemMax[harmor, EnergyPack] = 1;
 $ItemMax[harmor, RepairPack] = 1;
 $ItemMax[harmor, ShieldPack] = 1;
 $ItemMax[harmor, SensorJammerPack] = 1;
-$ItemMax[harmor, MotionSensorPack] = 1;
+$ItemMax[harmor, CommandPack] = 0;
+$ItemMax[harmor, MotionSensorPack] = 0;
 $ItemMax[harmor, PulseSensorPack] = 1;
 $ItemMax[harmor, DeployableSensorJammerPack] = 1;
-$ItemMax[harmor, CameraPack] = 1;
+$ItemMax[harmor, CameraPack] = 0;
 $ItemMax[harmor, TurretPack] = 1;
+$ItemMax[harmor, HeavyTurretPack] = 1;
 $ItemMax[harmor, AmmoPack] = 1;
 $ItemMax[harmor, RepairKit] = 1;
 $ItemMax[harmor, DeployableInvPack] = 1;
 $ItemMax[harmor, DeployableAmmoPack] = 1;
-
-$MaxWeapons[harmor] = 5;
-
-
-
-
 
 //------------------------------------------------------------------
 // Heavy Armor data:
@@ -99,7 +104,7 @@ PlayerData harmor
    groundForce = 35 * 18.0;
    groundTraction = 4.5;
    mass = 18.0;
-	maxEnergy = 110;
+	maxEnergy = $MaxEnergy[harmor];
    drag = 1.0;
    density = 2.5;
    canCrouch = false;

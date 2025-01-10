@@ -55,35 +55,35 @@ SeekingMissileData TurretMissile
 
 TurretData RocketTurret
 {
-	maxDamage = 0.75;
-	maxEnergy = 100;
-	minGunEnergy = 60;
-	maxGunEnergy = 60;
-	range = 150;
-	gunRange = 300;
-	visibleToSensor = true;
-	dopplerVelocity = 0;
+	activationSound = SoundMissileTurretOn;
 	castLOS = true;
-	supression = false;
+	className = "Turret";
+	damageSkinData = "objectDamageSkins";
+	deactivateSound = SoundMissileTurretOff;
+	debrisId = defaultDebrisLarge;
+	description = "Rocket Turret";
+	dopplerVelocity = 0;
+	explosionId = LargeShockwave;
+	fireSound = SoundMissileTurretFire;
+	gunRange = 300;
 	mapFilter = 2;
 	mapIcon = "M_turret";
-	debrisId = defaultDebrisLarge;
-	className = "Turret";
+	maxDamage = 0.75;
+	maxEnergy = 100;
+	maxGunEnergy = 60;
+	minGunEnergy = 60;
+	projectileType = TurretMissile;
+	range = 150;
+	shadowDetailMask = 8;
 	shapeFile = "missileturret";
 	shieldShapeName = "shield_medium";
 	speed = 2.0;
 	speedModifier = 2.0;
-	projectileType = TurretMissile;
-//	reloadDelay = 3.5;
-	fireSound = SoundMissileTurretFire;
-	activationSound = SoundMissileTurretOn;
-	deactivateSound = SoundMissileTurretOff;
-//	whirSound = SoundMissileTurretTurn;
-	damageSkinData = "objectDamageSkins";
-	shadowDetailMask = 8;
+	supression = false;
+	visibleToSensor = true;
    targetableFovRatio = 0.5;
-	explosionId = LargeShockwave;
-	description = "Rocket Turret";
+//	reloadDelay = 3.5;
+//	whirSound = SoundMissileTurretTurn;
 };
 
 function SeekingMissile::updateTargetPercentage(%target)

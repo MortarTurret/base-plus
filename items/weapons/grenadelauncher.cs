@@ -65,7 +65,7 @@ ItemData GrenadeAmmo
 	description = "Grenade Ammo";
 	className = "Ammo";
 	shapeFile = "grenammo";
-   heading = "xAmmunition";
+  heading = "xAmmunition";
 	shadowDetailMask = 4;
 	price = 2;
 };

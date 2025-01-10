@@ -23,24 +23,6 @@ LightningData turretCharge
    soundId = SoundELFFire;
 };
 
-function Lightning::damageTarget(%target, %timeSlice, %damPerSec, %enDrainPerSec, %pos, %vec, %mom, %shooterId)
-{
-   %damVal = %timeSlice * %damPerSec;
-   %enVal  = %timeSlice * %enDrainPerSec;
-
-   GameBase::applyDamage(%target, $ELFDamageType, %damVal, %pos, %vec, %mom, %shooterId);
-
-   %energy = GameBase::getEnergy(%target);
-   %energy = %energy - %enVal;
-   if (%energy < 0) {
-      %energy = 0;
-   }
-   GameBase::setEnergy(%target, %energy);
-}
-
-
-
-
 TurretData ELFTurret	   
 {			 
 	maxDamage = 1.0;

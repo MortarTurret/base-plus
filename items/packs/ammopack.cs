@@ -14,8 +14,7 @@ ItemImageData AmmoPackImage
 {
 	shapeFile = "AmmoPack";
 	mountPoint = 2;
-   mountOffset = { 0, -0.03, 0 };
-//   mountRotation = { 1.57, 0, 0 };
+  mountOffset = { 0, -0.03, 0 };
 	firstPerson = false;
 };
 

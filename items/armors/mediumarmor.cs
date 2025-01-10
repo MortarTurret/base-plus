@@ -1,35 +1,49 @@
-$ArmorType[Female, MediumArmor] = mfemale;	   
 $ArmorType[Male, MediumArmor] = marmor;
-$ArmorName[mfemale] = MediumArmor;
+$ArmorType[Female, MediumArmor] = mfemale;
+
 $ArmorName[marmor] = MediumArmor;
+$ArmorName[mfemale] = $ArmorName[marmor];
+
+$ArmorPrice[marmor] = $ArmorPrice[larmor] * 1.5;
+$ArmorPrice[mfemale] = $ArmorPrice[marmor];
+
+$MaxWeapons[marmor] = $MaxWeapons[larmor] + 1;
+$MaxWeapons[mfemale] = $MaxWeapons[marmor]; 
+
+$MaxEnergy[marmor] = $MaxEnergy[larmor] * 1.4;
+$MaxEnergy[mfemale] = $MaxEnergy[marmor];
+
+//----------------------------------------------------------------------------
+// Armors
+//----------------------------------------------------------------------------
 
 ItemData MediumArmor
 {
-   heading = "aArmor";
+  heading = "aArmor";
 	description = "Medium Armor";
 	className = "Armor";
-	price = 250;
+	price = $ArmorPrice[marmor];
 };
-
 
 //----------------------------------------------------------------------------
 // Medium Armor
 //----------------------------------------------------------------------------
-$DamageScale[marmor, $LandingDamageType] = 1.0;
-$DamageScale[marmor, $ImpactDamageType] = 1.0;
-$DamageScale[marmor, $CrushDamageType] = 1.0;
-$DamageScale[marmor, $ChaingunDamageType] = 1.0;
-$DamageScale[marmor, $PlasmaDamageType] = 0.6;
-$DamageScale[marmor, $TurretDamageType] = 1.0;
-$DamageScale[marmor, $DiscDamageType] = 1.0;
-$DamageScale[marmor, $RocketDamageType] = 1.0;
-$DamageScale[marmor, $GrenadeDamageType] = 1.0;
-$DamageScale[marmor, $DebrisDamageType] = 1.0;
-$DamageScale[marmor, $LaserDamageType] = 1.0;
-$DamageScale[marmor, $MortarDamageType] = 1.0;
+
 $DamageScale[marmor, $BlasterDamageType] = 1.0;
+$DamageScale[marmor, $ChaingunDamageType] = 1.0;
+$DamageScale[marmor, $CrushDamageType] = 1.0;
+$DamageScale[marmor, $DebrisDamageType] = 1.0;
+$DamageScale[marmor, $DiscDamageType] = 1.0;
 $DamageScale[marmor, $ELFDamageType] = 1.0;
+$DamageScale[marmor, $GrenadeDamageType] = 1.0;
+$DamageScale[marmor, $ImpactDamageType] = 1.0;
+$DamageScale[marmor, $LandingDamageType] = 1.0;
+$DamageScale[marmor, $LaserDamageType] = 1.0;
 $DamageScale[marmor, $MineDamageType] = 1.0;
+$DamageScale[marmor, $MortarDamageType] = 1.0;
+$DamageScale[marmor, $PlasmaDamageType] = 0.6;
+$DamageScale[marmor, $RocketDamageType] = 1.0;
+$DamageScale[marmor, $TurretDamageType] = 1.0;
 
 $ItemMax[marmor, Blaster] = 1;
 $ItemMax[marmor, Chaingun] = 1;
@@ -37,90 +51,90 @@ $ItemMax[marmor, Disclauncher] = 1;
 $ItemMax[marmor, GrenadeLauncher] = 1;
 $ItemMax[marmor, Mortar] = 0;
 $ItemMax[marmor, PlasmaGun] = 1;
+$ItemMax[marmor, FlameThrower] = 1;
 $ItemMax[marmor, LaserRifle] = 0;
 $ItemMax[marmor, EnergyRifle] = 1;
 $ItemMax[marmor, TargetingLaser] = 1;
 $ItemMax[marmor, MineAmmo] = 3;
-$ItemMax[marmor, Grenade] = 6;
+$ItemMax[marmor, Grenade] = 3;
 $ItemMax[marmor, Beacon] = 3;
 
-$ItemMax[marmor, BulletAmmo] = 150;
-$ItemMax[marmor, PlasmaAmmo] = 40;
-$ItemMax[marmor, DiscAmmo] = 15;
+$ItemMax[marmor, BulletAmmo] = 200;
+$ItemMax[marmor, PlasmaAmmo] = 50;
+$ItemMax[marmor, DiscAmmo] = 20;
 $ItemMax[marmor, GrenadeAmmo] = 10;
-$ItemMax[marmor, MortarAmmo] = 10;
+$ItemMax[marmor, MortarAmmo] = 0;
 
 $ItemMax[marmor, EnergyPack] = 1;
 $ItemMax[marmor, RepairPack] = 1;
 $ItemMax[marmor, ShieldPack] = 1;
 $ItemMax[marmor, SensorJammerPack] = 1;
+$ItemMax[marmor, CommandPack] = 1;
 $ItemMax[marmor, MotionSensorPack] = 1;
 $ItemMax[marmor, PulseSensorPack] = 1;
 $ItemMax[marmor, DeployableSensorJammerPack] = 1;
-$ItemMax[marmor, CameraPack] = 1;
+$ItemMax[marmor, CameraPack] = 0;
 $ItemMax[marmor, TurretPack] = 1;
+$ItemMax[marmor, HeavyTurretPack] = 0;
 $ItemMax[marmor, AmmoPack] = 1;
 $ItemMax[marmor, RepairKit] = 1;
 $ItemMax[marmor, DeployableInvPack] = 1;
 $ItemMax[marmor, DeployableAmmoPack] = 1;
 
-$MaxWeapons[marmor] = 4;
-
-
 //----------------------------------------------------------------------------
 // Medium Female Armor
 //----------------------------------------------------------------------------
-$DamageScale[mfemale, $LandingDamageType] = 1.0;
-$DamageScale[mfemale, $ImpactDamageType] = 1.0;
-$DamageScale[mfemale, $CrushDamageType] = 1.0;
-$DamageScale[mfemale, $ChaingunDamageType] = 1.0;
-$DamageScale[mfemale, $TurretDamageType] = 1.0;
-$DamageScale[mfemale, $PlasmaDamageType] = 0.6;
-$DamageScale[mfemale, $DiscDamageType] = 1.0;
-$DamageScale[mfemale, $RocketDamageType] = 1.0;
-$DamageScale[mfemale, $GrenadeDamageType] = 1.0;
-$DamageScale[mfemale, $DebrisDamageType] = 1.0;
-$DamageScale[mfemale, $LaserDamageType] = 1.0;
-$DamageScale[mfemale, $MortarDamageType] = 1.0;
 $DamageScale[mfemale, $BlasterDamageType] = 1.0;
+$DamageScale[mfemale, $ChaingunDamageType] = 1.0;
+$DamageScale[mfemale, $CrushDamageType] = 1.0;
+$DamageScale[mfemale, $DebrisDamageType] = 1.0;
+$DamageScale[mfemale, $DiscDamageType] = 1.0;
 $DamageScale[mfemale, $ELFDamageType] = 1.0;
+$DamageScale[mfemale, $GrenadeDamageType] = 1.0;
+$DamageScale[mfemale, $ImpactDamageType] = 1.0;
+$DamageScale[mfemale, $LandingDamageType] = 1.0;
+$DamageScale[mfemale, $LaserDamageType] = 1.0;
 $DamageScale[mfemale, $MineDamageType] = 1.0;
+$DamageScale[mfemale, $MortarDamageType] = 1.0;
+$DamageScale[mfemale, $PlasmaDamageType] = 0.6;
+$DamageScale[mfemale, $RocketDamageType] = 1.0;
+$DamageScale[mfemale, $TurretDamageType] = 1.0;
 
 $ItemMax[mfemale, Blaster] = 1;
 $ItemMax[mfemale, Chaingun] = 1;
 $ItemMax[mfemale, Disclauncher] = 1;
 $ItemMax[mfemale, GrenadeLauncher] = 1;
 $ItemMax[mfemale, Mortar] = 0;
-$ItemMax[mfemale, PlasmaGun] = 1;
 $ItemMax[mfemale, LaserRifle] = 0;
+$ItemMax[mfemale, PlasmaGun] = 1;
+$ItemMax[mfemale, FlameThrower] = 1;
 $ItemMax[mfemale, EnergyRifle] = 1;
 $ItemMax[mfemale, TargetingLaser] = 1;
 $ItemMax[mfemale, MineAmmo] = 3;
-$ItemMax[mfemale, Grenade] = 6;
-$ItemMax[mfemale, Beacon] = 3;
+$ItemMax[mfemale, Grenade] = 3;
+$ItemMax[mfemale, Beacon] = 2;
 
-$ItemMax[mfemale, BulletAmmo] = 150;
-$ItemMax[mfemale, PlasmaAmmo] = 40;
-$ItemMax[mfemale, DiscAmmo] = 15;
+$ItemMax[mfemale, BulletAmmo] = 200;
+$ItemMax[mfemale, PlasmaAmmo] = 50;
+$ItemMax[mfemale, DiscAmmo] = 20;
 $ItemMax[mfemale, GrenadeAmmo] = 10;
-$ItemMax[mfemale, MortarAmmo] = 10;
+$ItemMax[mfemale, MortarAmmo] = 0;
 
 $ItemMax[mfemale, EnergyPack] = 1;
 $ItemMax[mfemale, RepairPack] = 1;
 $ItemMax[mfemale, ShieldPack] = 1;
 $ItemMax[mfemale, SensorJammerPack] = 1;
+$ItemMax[mfemale, CommandPack] = 1;
 $ItemMax[mfemale, MotionSensorPack] = 1;
 $ItemMax[mfemale, PulseSensorPack] = 1;
 $ItemMax[mfemale, DeployableSensorJammerPack] = 1;
-$ItemMax[mfemale, CameraPack] = 1;
+$ItemMax[mfemale, CameraPack] = 0;
 $ItemMax[mfemale, TurretPack] = 1;
+$ItemMax[mfemale, HeavyTurretPack] = 0;
 $ItemMax[mfemale, AmmoPack] = 1;
 $ItemMax[mfemale, RepairKit] = 1;
 $ItemMax[mfemale, DeployableInvPack] = 1;
 $ItemMax[mfemale, DeployableAmmoPack] = 1;
-
-$MaxWeapons[mfemale] = 4;
-
 
 //------------------------------------------------------------------
 // Medium Armor data:
@@ -128,42 +142,42 @@ $MaxWeapons[mfemale] = 4;
 
 PlayerData marmor
 {
-   className = "Armor";
-   shapeFile = "marmor";
-   flameShapeName = "mflame";
-   shieldShapeName = "shield";
-   damageSkinData = "armorDamageSkins";
-	debrisId = playerDebris;
-   shadowDetailMask = 1;
+  className = "Armor";
+  shapeFile = "marmor";
+  flameShapeName = "mflame";
+  shieldShapeName = "shield";
+  damageSkinData = "armorDamageSkins";
+  debrisId = playerDebris;
+  shadowDetailMask = 1;
 
-   canCrouch = false;
-   visibleToSensor = True;
-	mapFilter = 1;
-	mapIcon = "M_player";
+  canCrouch = false;
+  visibleToSensor = True;
+  mapFilter = 1;
+  mapIcon = "M_player";
 
-   maxJetSideForceFactor = 0.8;
-   maxJetForwardVelocity = 17;
-   minJetEnergy = 1;
-   jetForce = 320;
-   jetEnergyDrain = 1.0;
+  maxJetSideForceFactor = 0.8;
+  maxJetForwardVelocity = 17;
+  minJetEnergy = 1;
+  jetForce = 320;
+  jetEnergyDrain = 1.0;
 
-	maxDamage = 1.0;
-   maxForwardSpeed = 8.0;
-   maxBackwardSpeed = 7.0;
-   maxSideSpeed = 7.0;
-   groundForce = 35 * 13.0;
-   mass = 13.0;
-   groundTraction = 3.0;
-	
-	maxEnergy = 80;
-   drag = 1.0;
-   density = 1.5;
+  maxDamage = 1.0;
+  maxForwardSpeed = 8.0;
+  maxBackwardSpeed = 7.0;
+  maxSideSpeed = 7.0;
+  groundForce = 35 * 13.0;
+  mass = 13.0;
+  groundTraction = 3.0;
 
-	minDamageSpeed = 25;
-	damageScale = 0.005;
+  maxEnergy = $MaxEnergy[marmor];
+  drag = 1.0;
+  density = 1.5;
 
-   jumpImpulse = 110;
-   jumpSurfaceMinDot = 0.2;
+  minDamageSpeed = 25;
+  damageScale = 0.005;
+
+  jumpImpulse = 110;
+  jumpSurfaceMinDot = 0.2;
 
    // animation data:
    // animation name, one shot, exclude, direction
@@ -296,42 +310,42 @@ PlayerData marmor
 
 PlayerData mfemale
 {
-   className = "Armor";
-   shapeFile = "mfemale";
-   flameShapeName = "mflame";
-   shieldShapeName = "shield";
-   damageSkinData = "armorDamageSkins";
-	debrisId = playerDebris;
-   shadowDetailMask = 1;
+  className = "Armor";
+  shapeFile = "mfemale";
+  flameShapeName = "mflame";
+  shieldShapeName = "shield";
+  damageSkinData = "armorDamageSkins";
+  debrisId = playerDebris;
+  shadowDetailMask = 1;
 
-   visibleToSensor = True;
-	mapFilter = 1;
-	mapIcon = "M_player";
+  visibleToSensor = True;
+  mapFilter = 1;
+  mapIcon = "M_player";
 
-   maxJetSideForceFactor = 0.8;
-   maxJetForwardVelocity = 17;
-   minJetEnergy = 1;
-   jetForce = 320;
-   jetEnergyDrain = 1.0;
+  maxJetSideForceFactor = 0.8;
+  maxJetForwardVelocity = 17;
+  minJetEnergy = 1;
+  jetForce = 320;
+  jetEnergyDrain = 1.0;
 
-   canCrouch = false;
-	maxDamage = 1.0;
-   maxForwardSpeed = 8.0;
-   maxBackwardSpeed = 7.0;
-   maxSideSpeed = 7.0;
-   groundForce = 35 * 13.0;
-   mass = 13.0;
-   groundTraction = 3.0;
-	maxEnergy = 80;
-   mass = 13.0;
-   drag = 1.0;
-   density = 1.5;
+  canCrouch = false;
+  maxDamage = 1.0;
+  maxForwardSpeed = 8.0;
+  maxBackwardSpeed = 7.0;
+  maxSideSpeed = 7.0;
+  groundForce = 35 * 13.0;
+  mass = 13.0;
+  groundTraction = 3.0;
+  maxEnergy = $MaxEnergy[mfemale];
+  mass = 13.0;
+  drag = 1.0;
+  density = 1.5;
 
-	minDamageSpeed = 25;
-	damageScale = 0.005;
+  minDamageSpeed = 25;
+  damageScale = 0.005;
 
-   jumpImpulse = 110;
-   jumpSurfaceMinDot = 0.2;
+  jumpImpulse = 110;
+  jumpSurfaceMinDot = 0.2;
 
    // animation data:
    // animation name, one shot, exclude, direction,

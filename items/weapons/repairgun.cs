@@ -1,7 +1,6 @@
-RepairEffectData RepairBolt
-{
+RepairEffectData RepairBolt {
    bitmapName       = "repairadd.png";
-   boltLength       = 5.0;
+   boltLength       = 7.5;
    segmentDivisions = 4;
    beamWidth        = 0.125;
 
@@ -9,7 +8,7 @@ RepairEffectData RepairBolt
    skipPercent  = 0.6;
    displaceBias = 0.15;
 
-   lightRange = 3.0;
+   lightRange = 2.0;
    lightColor = { 0.85, 0.25, 0.25 };
 };
 
@@ -18,25 +17,34 @@ function RepairBolt::onAcquire(%this, %player, %target)
 	%client = Player::getClient(%player);
 
 	if (%target == %player) {
-	   %player.repairTarget = -1;
+    %player.repairTarget = -1;
+
 		if (GameBase::getDamageLevel(%player) != 0) {
-			%player.repairRate = 0.05;
+			%player.repairRate = 0.075;
 			%player.repairTarget = %player;
+
 			Client::sendMessage(%client, 0, "AutoRepair On");
 		}
+
 		else {
-			Client::sendMessage(%client,0,"Nothing in range");
+			Client::sendMessage(%client, 0, "Nothing in range");
 			Player::trigger(%player, $WeaponSlot, false);
+
 			return;
 		}
 	}
+
 	else {
-      %player.repairTarget = %target;
-		%player.repairRate   = 0.1;
+    %player.repairTarget = %target;
+
+		%player.repairRate   = 0.15;
+
 		if (getObjectType(%player.repairTarget) == "Player") {
+
 			%rclient = Player::getClient(%player.repairTarget);
 			%name = Client::getName(%rclient);
 		}
+
 		else { 
 			%name = GameBase::getMapName(%target);
 			if(%name == "") {
@@ -45,13 +53,8 @@ function RepairBolt::onAcquire(%this, %player, %target)
 
 			// prevent repairing
 			%datablock = GameBase::getDataName( %player.repairTarget );
-			if ( !$Server::allowRepair && $AntiRepair::Items[%datablock] ) {
-				Client::sendMessage( %client, 1, "Repairing this item my deteriorate the quality of the map at this time~wLeftMissionArea.wav" );
-				Player::trigger( %player, $WeaponSlot, false );
-				%player.repairTarget = -1;
-				return;
-			}
 		}
+
 		if (GameBase::getDamageLevel(%player.repairTarget) == 0) {
 			Client::sendMessage(%client,0,%name @ " is not damaged");
 			Player::trigger(%player,$WeaponSlot,false);

@@ -5,6 +5,7 @@ $InvList[Disclauncher] = 1;
 $InvList[GrenadeLauncher] = 1;
 $InvList[Mortar] = 1;
 $InvList[PlasmaGun] = 1;
+$InvList[FlameThrower] = 1;
 $InvList[LaserRifle] = 1;
 $InvList[EnergyRifle] = 1;
 $InvList[TargetingLaser] = 1;
@@ -18,6 +19,7 @@ $InvList[DiscAmmo] = 1;
 $InvList[GrenadeAmmo] = 1;
 $InvList[MortarAmmo] = 1;
   
+$InvList[CommandPack] = 1;
 $InvList[EnergyPack] = 1;
 $InvList[RepairPack] = 1;
 $InvList[ShieldPack] = 1;
@@ -27,6 +29,7 @@ $InvList[PulseSensorPack] = 1;
 $InvList[DeployableSensorJammerPack] = 1;
 $InvList[CameraPack] = 1;
 $InvList[TurretPack] = 1;
+$InvList[HeavyTurretPack] = 1;
 $InvList[AmmoPack] = 1;
 $InvList[RepairKit] = 1;
 $InvList[DeployableInvPack] = 1;
@@ -37,28 +40,29 @@ $InvList[DeployableAmmoPack] = 1;
 
 StaticShapeData InventoryStation
 {
-   description = "Station Supply Unit";
-	shapeFile = "inventory_sta";
-	className = "Station";
-	visibleToSensor = true;
-	sequenceSound[0] = { "activate", SoundActivateInventoryStation };
-	sequenceSound[1] = { "power", SoundInventoryStationPower };
-	sequenceSound[2] = { "use", SoundUseInventoryStation };
-	maxDamage = 1.0;
-	debrisId = flashDebrisLarge;
-	mapFilter = 4;
-	mapIcon = "M_station";
-	damageSkinData = "objectDamageSkins";
-	shadowDetailMask = 16;
-	triggerRadius = 1.5;
-   explosionId = flashExpLarge;
+  className = "Station";
+  damageSkinData = "objectDamageSkins";
+  debrisId = flashDebrisLarge;
+  description = "Station Supply Unit";
+  explosionId = flashExpLarge;
+  mapFilter = 4;
+  mapIcon = "M_station";
+  maxDamage = 1.0;
+  sequenceSound[0] = { "activate", SoundActivateInventoryStation };
+  sequenceSound[1] = { "power", SoundInventoryStationPower };
+  sequenceSound[2] = { "use", SoundUseInventoryStation };
+  shadowDetailMask = 16;
+  shapeFile = "inventory_sta";
+  triggerRadius = 1.5;
+  visibleToSensor = true;
 };
 
 function InventoryStation::onEndSequence(%this,%thread)
 {
 	//echo("End Seq ",%thread);
-	if (Station::onEndSequence(%this,%thread)) 
+	if(Station::onEndSequence(%this,%thread)) {
 		InventoryStation::onResupply(%this,"InvList");
+  }
 }
 
 function InventoryStation::onResupply(%this,%InvShopList) {

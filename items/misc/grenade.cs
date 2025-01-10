@@ -1,7 +1,7 @@
 $weapon = "Grenade";
 $ammo = "Grenade";
-$SellAmmo[$ammo] = 5; // sell or drop amount
-$AmmoPackMax[$ammo] = 10;
+$SellAmmo[$ammo] = 2; // sell or drop amount
+$AmmoPackMax[$ammo] = 6;
 
 //----------------------------------------------------------------------------
 

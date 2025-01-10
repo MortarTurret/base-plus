@@ -39,7 +39,7 @@ $TeamEnergy[7]  = $DefaultTeamEnergy;
 // Time in sec player must wait before he can throw a Grenade or Mine after leaving
 //	a station.
 //---------------------------------------------------------------------------------
-$WaitThrowTime = 2;
+$WaitThrowTime = 1;
 
 //---------------------------------------------------------------------------------
 // If 1 then Team Spending Ignored -- Team Energy is set to $MaxTeamEnergy every
@@ -71,13 +71,13 @@ $secTeamEnergy = 30;
 //---------------------------------------------------------------------------------
 // (Rate is sec's) Items respwan
 //---------------------------------------------------------------------------------
-$ItemRespawnTime = 30;
+$ItemRespawnTime = 20;
 
 //---------------------------------------------------------------------------------
 //Amount of Energy remote stations start out with
 //---------------------------------------------------------------------------------
-$RemoteAmmoEnergy = 2500; 
-$RemoteInvEnergy = 3000;
+$RemoteAmmoEnergy = 7500; 
+$RemoteInvEnergy = 10000;
 
 //---------------------------------------------------------------------------------
 // TEAM ENERGY -  Warn team when teammate has spent x amount - Warn team that 
@@ -94,14 +94,26 @@ $InitialPlayerEnergy = 5000;
 //---------------------------------------------------------------------------------
 // REMOTE TURRET
 //---------------------------------------------------------------------------------
-$MaxNumTurretsInBox = 2;     //Number of remote turrets allowed in the area
-$TurretBoxMaxLength = 50;    //Define Max Length of the area
-$TurretBoxMaxWidth =  50;    //Define Max Width of the area
+$MaxNumTurretsInBox = 3;     //Number of remote turrets allowed in the area
+$TurretBoxMaxLength = 40;    //Define Max Length of the area
+$TurretBoxMaxWidth =  40;    //Define Max Width of the area
 $TurretBoxMaxHeight = 25;    //Define Max Height of the area
 
 $TurretBoxMinLength = 10;	  //Define Min Length from another turret
 $TurretBoxMinWidth =  10;	  //Define Min Width from another turret
 $TurretBoxMinHeight = 10;    //Define Min Height from another turret
+
+//---------------------------------------------------------------------------------
+// HEAVY REMOTE TURRET
+//---------------------------------------------------------------------------------
+$MaxNumHeavyTurretsInBox = 1;     //Number of heavy remote turrets allowed in the area
+$HeavyTurretBoxMaxLength = 50;    //Define Max Length of the area
+$HeavyTurretBoxMaxWidth =  50;    //Define Max Width of the area
+$HeavyTurretBoxMaxHeight = 25;    //Define Max Height of the area
+
+$HeavyTurretBoxMinLength = 15;	  //Define Min Length from another heavy turret
+$HeavyTurretBoxMinWidth =  15;	  //Define Min Width from another heavy turret
+$HeavyTurretBoxMinHeight = 10;    //Define Min Height from another heavy turret
 
 //---------------------------------------------------------------------------------
 //	Object Types	

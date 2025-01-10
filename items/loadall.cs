@@ -6,16 +6,22 @@ run("debris");
 run("item");
 run("marker");
 run("nextweapon");
+run("hotwire");
 
 // turrets before weapons because elf/rocket define some datablocks/damagetypes weapons need
 rundir( "server/items/turrets/" );
 run("deployableturret");
+run("heavydeployableturret");
 run("elfturret");
 run("indoorturret");
 run("mortarturret");
 run("plasmaturret");
 run("rocketturret");
 run("turret");
+
+// for weird stuff that affects both turrets and weapon projectiles
+rundir( "server/items/special/" );
+run("lightning");
 
 // now do weapons so they can define their damage types
 rundir( "server/items/weapons/" );
@@ -27,6 +33,8 @@ run("grenadelauncher");
 run("laserrifle");
 run("mortar");
 run("plasmagun");
+run("flamethrower");
+// run("rocketlauncher");
 run("repairgun");
 run("targetinglaser");
 
@@ -56,9 +64,11 @@ run("energypack");
 run("motionsensorpack");
 run("pulsesensorpack");
 run("repairpack");
+run("commandpack");
 run("sensorjammerpack");
 run("shieldpack");
 run("turretpack");
+run("heavyturretpack");
 
 rundir( "server/items/sensors/" );
 run("sensor");

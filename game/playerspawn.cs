@@ -1,10 +1,9 @@
 $spawnBuyList[0] = LightArmor;
-$spawnBuyList[1] = Blaster;
-$spawnBuyList[2] = Chaingun;
-$spawnBuyList[3] = Disclauncher;
+$spawnBuyList[1] = Disclauncher;
+$spawnBuyList[2] = EnergyRifle;
+$spawnBuyList[3] = RepairPack;
 $spawnBuyList[4] = RepairKit;
 $spawnBuyList[5] = "";
-
 
 function Game::playerSpawned( %pl, %cl, %armor ) {
 	%cl.spawn = 1;

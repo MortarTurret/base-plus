@@ -4,15 +4,16 @@ $AutoUse[RepairKit] = false;
 
 ItemData RepairKit
 {
-   description = "Repair Kit";
-   shapeFile = "armorKit";
-   heading = "eMiscellany";
-   shadowDetailMask = 4;
-   price = 35;
+  description = "Repair Kit";
+  shapeFile = "armorKit";
+  heading = "eMiscellany";
+  shadowDetailMask = 4;
+  price = 25;
 };
 
 function RepairKit::onUse(%player,%item)
 {
 	Player::decItemCount(%player,%item);
-	GameBase::repairDamage(%player,0.2);
+
+	GameBase::repairDamage(%player,0.5);
 }

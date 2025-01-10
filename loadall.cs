@@ -3,6 +3,7 @@ run("command");
 run("flood");
 run("interiorlight");
 run("messaging");
+
 if ( !$MissionLighting )
 	run("missionlist");
 
@@ -29,7 +30,6 @@ run("makeadmin");
 run("menu");
 run("nonself");
 run("self");
-run("servertoggles");
 run("settimelimit");
 run("stripadmin");
 run("vote");

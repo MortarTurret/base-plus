@@ -20,6 +20,8 @@ $CorpseTimeoutValue = 22;
 
 function Player::onAdd(%this) {
 	GameBase::setRechargeRate(%this,8);
+
+  %this.ELFState = "unequipped";
 }
 
 function Player::onRemove(%this) {

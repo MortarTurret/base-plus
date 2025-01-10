@@ -6,9 +6,9 @@ ItemData RepairPatch
 	description = "Repair Patch";
 	className = "Repair";
 	shapeFile = "armorPatch";
-   heading = "eMiscellany";
-	shadowDetailMask = 4;
-  	price = 2;
+  heading = "eMiscellany";
+  shadowDetailMask = 4;
+  price = 1;
 };
 
 function RepairPatch::onCollision(%this,%object)
@@ -26,5 +26,6 @@ function RepairPatch::onCollision(%this,%object)
 function RepairPatch::onUse(%player,%item)
 {
 	Player::decItemCount(%player,%item);
-	GameBase::repairDamage(%player,0.1);
+
+	GameBase::repairDamage(%player,0.25);
 }

@@ -1,29 +1,28 @@
 //----------------------------------------------------------------------------
-
 ItemImageData SensorJammerPackImage
 {
-	shapeFile = "sensorjampack";
-	mountPoint = 2;
-	weaponType = 2;  // Sustained
-	maxEnergy = 10;  // Energy used/sec for sustained weapons
-	sfxFire = SoundJammerOn;
-  	mountOffset = { 0, -0.05, 0 };
-  	mountRotation = { 0, 0, 0 };
-	firstPerson = false;
+  firstPerson = false;
+  maxEnergy = 10;  // Energy used/sec for sustained weapons
+  mountOffset = { 0, -0.05, 0 };
+  mountPoint = 2;
+  mountRotation = { 0, 0, 0 };
+  sfxFire = SoundJammerOn;
+  shapeFile = "sensorjampack";
+  weaponType = 2;  // Sustained
 };
 
 ItemData SensorJammerPack
 {
-	description = "Sensor Jammer Pack";
-	shapeFile = "sensorjampack";
 	className = "Backpack";
-   heading = "cBackpacks";
-	shadowDetailMask = 4;
+	description = "Sensor Jammer Pack";
+	hiliteOnActive = true;
+	hudIcon = "sensorjamerpack";
 	imageType = SensorJammerPackImage;
 	price = 200;
-	hudIcon = "sensorjamerpack";
+	shadowDetailMask = 4;
+	shapeFile = "sensorjampack";
 	showWeaponBar = true;
-	hiliteOnActive = true;
+  heading = "cBackpacks";
 };
 
 function SensorJammerPackImage::onActivate(%player,%imageSlot)

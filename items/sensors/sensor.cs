@@ -1,10 +1,16 @@
-//-------------------------------------------------------------------------- 
-// Default sensor methods
+function Sensor::onAdd(%this) {
+  %name = GameBase::getDataName(%this);
+
+  if(%name != DeployableMotionSensor && %name != DeployableSensorJammer && %name != DeployablePulseSensor) {
+    %this.hotwirable = true;
+    %this.hotwired = false;
+  }
+}
 
 function Sensor::onActivate(%this)
 {
-	if(GameBase::isPowered(%this)) {
-		GameBase::playSequence(%this,0,"power");
+	if(GameBase::isPowered(%this) || %this.hotwired) {
+		GameBase::playSequence(%this, 0, "power");
 	}
 }
 
@@ -15,24 +21,31 @@ function Sensor::onDeactivate(%this)
 
 function Sensor::onPower(%this,%power,%generator)
 {
-	if (%power) {
+	if(%power) {
 		%this.shieldStrength = 0.03;
 		GameBase::setRechargeRate(%this,10);
 	}
+
 	else {
 		%this.shieldStrength = 0;
 		GameBase::setRechargeRate(%this,0);
 	}
-	GameBase::setActive(%this,%power);
 }
 
 function Sensor::onEnabled(%this)
 {
-	if (GameBase::isPowered(%this)) {
-		%this.shieldStrength = 0.03;				  
-		GameBase::setRechargeRate(%this,10);
-		GameBase::setActive(%this,true);
+	if(GameBase::isPowered(%this)) {
+		%this.shieldStrength = 0.03;
+  }
+
+	if(GameBase::isPowered(%this) || %this.hotwired) {
+    GameBase::setRechargeRate(%this,10);
+		GameBase::setActive(%this, true);
 	}
+
+  if(!GameBase::isPowered(%this) && %this.hotwired) {
+    GameBase::playSequence(%this, 0, "power");
+  }
 }
 
 function Sensor::onDisabled(%this)
@@ -77,24 +90,24 @@ function Sensor::onDamage(%this,%type,%value,%pos,%vec,%mom,%object)
 
 SensorData PulseSensor
 {
-   description = "Large Pulse Sensor";
-   shapeFile = "radar";
-//   explosionId = DebrisExp;
-   maxDamage = 1.5;
-   range = 400;
-   dopplerVelocity = 0;
-   castLOS = true;
-   supression = false;
-	visibleToSensor = true;
-	sequenceSound[0] = { "power", SoundSensorPower };
-	mapFilter = 4;
-	mapIcon = "M_Radar";
-	debrisId = flashDebrisLarge;
-   shieldShapeName = "shield_medium";
-	maxEnergy = 100;
-	damageSkinData = "objectDamageSkins";
-	shadowDetailMask = 16;
-	explosionId = LargeShockwave;
+  className = "Sensor";
+  description = "Large Pulse Sensor";
+  shapeFile = "radar";
+  maxDamage = 1.5;
+  range = 400;
+  dopplerVelocity = 0;
+  castLOS = true;
+  supression = false;
+  visibleToSensor = true;
+  sequenceSound[0] = { "power", SoundSensorPower };
+  mapFilter = 4;
+  mapIcon = "M_Radar";
+  debrisId = flashDebrisLarge;
+  shieldShapeName = "shield_medium";
+  maxEnergy = 100;
+  damageSkinData = "objectDamageSkins";
+  shadowDetailMask = 16;
+  explosionId = LargeShockwave;
 };
 
 
@@ -102,21 +115,21 @@ SensorData PulseSensor
 
 SensorData MediumPulseSensor
 {
-   description = "Medium Pulse Sensor";
-   shapeFile = "sensor_pulse_med";
-//   explosionId = DebrisExp;
-   maxDamage = 1.0;
-   range = 250;
-   dopplerVelocity = 0;
-   castLOS = true;
-   supression = false;
-	visibleToSensor = true;
-	sequenceSound[0] = { "power", SoundSensorPower };
-	mapFilter = 4;
-	mapIcon = "M_Radar";
-	debrisId = flashDebrisLarge;
-   shieldShapeName = "shield_medium";
-	maxEnergy = 100;
-	damageSkinData = "objectDamageSkins";
-	shadowDetailMask = 16;
+  className = "Sensor";
+  description = "Medium Pulse Sensor";
+  shapeFile = "sensor_pulse_med";
+  maxDamage = 1.0;
+  range = 250;
+  dopplerVelocity = 0;
+  castLOS = true;
+  supression = false;
+  visibleToSensor = true;
+  sequenceSound[0] = { "power", SoundSensorPower };
+  mapFilter = 4;
+  mapIcon = "M_Radar";
+  debrisId = flashDebrisLarge;
+  shieldShapeName = "shield_medium";
+  maxEnergy = 100;
+  damageSkinData = "objectDamageSkins";
+  shadowDetailMask = 16;
 };

@@ -12,7 +12,6 @@ function menu::admin( %cl ) {
 	menu::add( "Change to Tournament mode", "ctourney", %cl, (%cl.canChangeGameMode && !$Server::TourneyMode) );
 	menu::add( "Set Time Limit", "ctimelimit", %cl, %cl.canChangeTimeLimit );
 	menu::add( "Announce Server Takeover", "takeovermes", %cl, %cl.canAnnounceTakeover );
-	menu::add( "Server Toggles...", "serverToggles", %cl );
 	menu::add( "Vote options...", "voteOptions", %cl );
 }
 
@@ -45,9 +44,6 @@ function processMenuAdmin( %cl, %selection ) {
          admin::setteamdamage(%cl, false);
     } else if(%selection == "voteOptions") { 
 	     menu::Vote(%cl);
-		 return;
- 	} else if(%selection == "serverToggles") { 
-	     menu::ServerToggles(%cl);
 		 return;
  	}
 

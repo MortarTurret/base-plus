@@ -31,6 +31,22 @@ ItemData RepairPack
 //----------------------------------------------------------------------------
 function RepairPack::onUse(%player,%item)
 {
+	%client = Player::getClient(%player); 
+  %playerName = Client::getName(%client);
+
+  C::Set("foo", "bar");
+
+  // error(%player);
+  // error(%playerName);
+  // error(C::Get("foo"));
+
+  %armor = Player::getArmor(%player);
+  %energy = GameBase::getEnergy(%player);
+
+  error("Player Armor: " @ %armor);
+  error("Player Energy: " @ %energy);
+  error("Player Max Energy: " @ $MaxEnergy[%armor] );
+
 	if (Player::getMountedItem(%player,$BackpackSlot) != %item) {
 		Player::mountItem(%player,%item,$BackpackSlot);
 	}
@@ -50,4 +66,39 @@ function RepairPack::onDrop(%player,%item)
 
 		Item::onDrop(%player,%item);
 	}
+}	
+
+// Original repair gun scripts
+//----------------------------------------------------------------------------
+/* 
+function RepairPack::onUse(%player,%item)
+{
+	if (Player::getMountedItem(%player,$BackpackSlot) != %item) {
+		Player::mountItem(%player,%item,$BackpackSlot);
+	}
+
+	else {  
+		Player::mountItem(%player,RepairGun,$WeaponSlot);
+	}
 }
+
+function RepairPack::onDrop(%player,%item)
+{
+	if($matchStarted) {
+		%mounted = Player::getMountedItem(%player,$WeaponSlot);
+
+		if (%mounted == RepairGun) {
+			Player::unmountItem(%player,$WeaponSlot);
+		}
+
+		else {
+			// Remount the existing weapon to make sure the RepairGun
+			// is not on the delayed mount "stack".
+			Player::mountItem(%player,%mounted,$WeaponSlot);
+		}
+
+		Item::onDrop(%player,%item);
+	}
+}	
+
+*/

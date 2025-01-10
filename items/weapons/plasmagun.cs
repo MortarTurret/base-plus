@@ -3,7 +3,8 @@ $ammo = "PlasmaAmmo";
 $AutoUse[$weapon] = true;
 $WeaponAmmo[$weapon] = $ammo;
 $SellAmmo[$ammo] = 5; // sell or drop amount
-$AmmoPackMax[$ammo] = 30;
+$AmmoPackMax[$ammo] = 50;
+
 Item::AddWeaponToSwitchCycle( $weapon );
 Item::AddDamageType( "Plasma" );
 

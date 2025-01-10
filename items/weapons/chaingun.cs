@@ -95,10 +95,6 @@ BulletData ChaingunBullet
    tracerLength       = 30;
 };
 
-
-
-
-
 //----------------------------------------------------------------------------
 
 ItemData BulletAmmo

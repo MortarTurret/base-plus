@@ -1,6 +1,6 @@
-ItemImageData TurretPackImage
+ItemImageData HeavyTurretPackImage
 {
-	shapeFile = "remoteturret";
+	shapeFile = "magcargo";
 	mountPoint = 2;
 	mountOffset = { 0, -0.12, -0.1 };
 	mountRotation = { 0, 0, 0 };
@@ -8,23 +8,23 @@ ItemImageData TurretPackImage
 	firstPerson = false;
 };
 
-ItemData TurretPack
+ItemData HeavyTurretPack
 {
-	description = "Turret";
-	shapeFile = "remoteturret";
+	description = "Heavy Turret";
+	shapeFile = "magcargo";
 	className = "Backpack";
   heading = "dDeployables";
-	imageType = TurretPackImage;
+	imageType = HeavyTurretPackImage;
 	shadowDetailMask = 4;
 	mass = 1.5;
 	elasticity = 0.2;
-	price = 350;
+	price = 600;
 	hudIcon = "deployable";
 	showWeaponBar = true;
 	hiliteOnActive = true;
 };
 
-function TurretPack::onUse(%player,%item)
+function HeavyTurretPack::onUse(%player,%item)
 {
 	if (Player::getMountedItem(%player,$BackpackSlot) != %item) {
 		Player::mountItem(%player,%item,$BackpackSlot);
@@ -35,9 +35,9 @@ function TurretPack::onUse(%player,%item)
 	}
 }
 
-function TurretPack::onDeploy(%player,%item,%pos)
+function HeavyTurretPack::onDeploy(%player,%item,%pos)
 {
-	if (TurretPack::deployShape(%player,%item)) {
+	if (HeavyTurretPack::deployShape(%player,%item)) {
 		Player::decItemCount(%player,%item);
 	}
 }
@@ -53,7 +53,7 @@ function CountObjects(%set,%name,%num)
 	return %count;
 }
 
-function TurretPack::deployShape(%player,%item)
+function HeavyTurretPack::deployShape(%player,%item)
 {
 	%client = Player::getClient(%player);
 
@@ -63,37 +63,38 @@ function TurretPack::deployShape(%player,%item)
 
 			if (%obj == "SimTerrain" || %obj == "InteriorShape") {
         %set = newObject("set",SimSet);
-				%num = containerBoxFillSet(%set,$StaticObjectType,$los::position,$TurretBoxMaxLength,$TurretBoxMaxWidth,$TurretBoxMaxHeight,0);
-				%num = CountObjects(%set, "DeployableTurret", %num);
+				%num = containerBoxFillSet(%set,$StaticObjectType,$los::position,$HeavyTurretBoxMaxLength,$HeavyTurretBoxMaxWidth,$HeavyTurretBoxMaxHeight,0);
+				%num = CountObjects(%set, "HeavyDeployableTurret", %num);
 
 				deleteObject(%set);
 
-				if($MaxNumTurretsInBox > %num) {
+				if($MaxNumHeavyTurretsInBox > %num) {
           %set = newObject("set",SimSet);
-					%num = containerBoxFillSet(%set,$StaticObjectType,$los::position,$TurretBoxMinLength,$TurretBoxMinWidth,$TurretBoxMinHeight,0);
-					%num = CountObjects(%set, "DeployableTurret", %num);
+					%num = containerBoxFillSet(%set,$StaticObjectType,$los::position,$HeavyTurretBoxMinLength,$HeavyTurretBoxMinWidth,$HeavyTurretBoxMinHeight,0);
+					%num = CountObjects(%set, "HeavyDeployableTurret", %num);
 
 					deleteObject(%set);
 
 					if(0 == %num) {
 						if (Vector::dot($los::normal,"0 0 1") > 0.7) {
+
 							if(checkDeployArea(%client, $los::position)) {
 								%rot = GameBase::getRotation(%player); 
-								%turret = newObject("remoteTurret", "Turret", DeployableTurret, true);
-                
+								%turret = newObject("hellfiregun", "Turret", HeavyDeployableTurret, true);
+
                 addToSet("MissionCleanup", %turret);
 
 								GameBase::setTeam(%turret,GameBase::getTeam(%player));
 								GameBase::setPosition(%turret,$los::position);
 								GameBase::setRotation(%turret,%rot);
-								Gamebase::setMapName(%turret, "RMT Turret#" @ $totalNumTurrets++ @ " " @ Client::getName(%client));
-								Client::sendMessage(%client, 0, "Remote Turret deployed");
+								Gamebase::setMapName(%turret,"HVY Turret#" @ $totalNumHeavyTurrets++ @ " " @ Client::getName(%client));
+								Client::sendMessage(%client, 0, "Heavy Remote Turret deployed");
 
 								playSound(SoundPickupBackpack, $los::position);
 
-								$TeamItemCount[GameBase::getTeam(%player) @ "TurretPack"]++;
+								$TeamItemCount[GameBase::getTeam(%player) @ "HeavyTurretPack"]++;
 
-								echo("MSG: ", %client, " deployed a Remote Turret");
+								echo("MSG: ", %client, " deployed a Heavy Remote Turret");
 
 								//	Remote turrets - kill points to player that deploy them
 								Client::setOwnedObject( %client, %turret ); 
@@ -108,11 +109,11 @@ function TurretPack::deployShape(%player,%item)
 					} 
 
 					else
-						Client::sendMessage(%client,0,"Frequency Overload - Too close to other remote turrets");
+						Client::sendMessage(%client,0,"Frequency Overload - Too close to other heavy remote turrets");
 				}
 
         else 
-          Client::sendMessage(%client,0,"Interference from other remote turrets in the area");
+					Client::sendMessage(%client,0,"Interference from other heavy remote turrets in the area");
 			}
 
 			else 
@@ -122,20 +123,24 @@ function TurretPack::deployShape(%player,%item)
 		else 
 			Client::sendMessage(%client,0,"Deploy position out of range");
 	}
+
 	else																						  
-	 	Client::sendMessage(%client,0,"Deployable Item limit reached for remote turrets");
+	 	Client::sendMessage(%client,0,"Deployable Item limit reached for heavy remote turrets");
 
 	return false;
 }
 
 function checkDeployArea(%client,%pos)
 {
-  	%set=newObject("set",SimSet);
-	%num=containerBoxFillSet(%set,$StaticObjectType | $ItemObjectType | $SimPlayerObjectType,%pos,1,1,1,1);
+  %set = newObject("set",SimSet);
+	%num = containerBoxFillSet(%set, $StaticObjectType | $ItemObjectType | $SimPlayerObjectType, %pos, 1, 1, 1, 1);
+
 	if(!%num) {
 		deleteObject(%set);
-		return 1;
+		
+    return 1;
 	}
+
 	else if(%num == 1 && getObjectType(Group::getObject(%set,0)) == "Player") { 
 		%obj = Group::getObject(%set,0);	
 

@@ -13,37 +13,35 @@ GrenadeData MortarShell
    bulletShapeName    = "mortar.dts";
    explosionTag       = mortarExp;
    collideWithOwner   = True;
-   ownerGraceMS       = 250;
-   collisionRadius    = 0.3;
+   ownerGraceMS       = 325;
+   collisionRadius    = 0.65;
    mass               = 5.0;
    elasticity         = 0.1;
 
    damageClass        = 1;       // 0 impact, 1, radius
-   damageValue        = 1.0;
+   damageValue        = 1.16;
    damageType         = $MortarDamageType;
 
-   explosionRadius    = 20.0;
+   explosionRadius    = 25.0;
    kickBackStrength   = 250.0;
-   maxLevelFlightDist = 275;
-   totalTime          = 30.0;
+   maxLevelFlightDist = 350;
+   totalTime          = 1000.0;
    liveTime           = 2.0;
-   projSpecialTime    = 0.01;
+   projSpecialTime    = 0.0375;
 
    inheritedVelocityScale = 0.5;
    smokeName              = "mortartrail.dts";
 };
 
-
 //----------------------------------------------------------------------------
-
 ItemData MortarAmmo
 {
-	description = "Mortar Ammo";
 	className = "Ammo";
-   heading = "xAmmunition";
-	shapeFile = "mortarammo";
-	shadowDetailMask = 4;
+	description = "Mortar Ammo";
 	price = 5;
+	shadowDetailMask = 4;
+	shapeFile = "mortarammo";
+  heading = "xAmmunition";
 };
 
 ItemImageData MortarImage
@@ -55,8 +53,8 @@ ItemImageData MortarImage
 	ammoType = MortarAmmo;
 	projectileType = MortarShell;
 	accuFire = false;
-	reloadTime = 0.5;
-	fireTime = 2.0;
+	reloadTime = 1.5;
+	fireTime = 1.5;
 
 	lightType = 3;  // Weapon Fire
 	lightRadius = 3;
@@ -71,13 +69,13 @@ ItemImageData MortarImage
 
 ItemData Mortar
 {
-	description = "Mortar";
 	className = "Weapon";
-	shapeFile = "mortargun";
+	description = "Mortar";
 	hudIcon = "mortar";
-   heading = "bWeapons";
-	shadowDetailMask = 4;
 	imageType = MortarImage;
 	price = 375;
+	shadowDetailMask = 4;
+	shapeFile = "mortargun";
 	showWeaponBar = true;
+  heading = "bWeapons";
 };

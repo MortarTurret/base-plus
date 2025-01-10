@@ -1,28 +1,27 @@
 //----------------------------------------------------------------------------
-
 ItemImageData ShieldPackImage
 {
-	shapeFile = "shieldPack";
-	mountPoint = 2;
-	weaponType = 2;  // Sustained
-	minEnergy = 4;
-	maxEnergy = 9;   // Energy/sec for sustained weapons
-	sfxFire = SoundShieldOn;
-	firstPerson = false;
+  firstPerson = false;
+  maxEnergy = 9;   // Energy/sec for sustained weapons
+  minEnergy = 4;
+  mountPoint = 2;
+  sfxFire = SoundShieldOn;
+  shapeFile = "shieldPack";
+  weaponType = 2;  // Sustained
 };
 
 ItemData ShieldPack
 {
-	description = "Shield Pack";
-	shapeFile = "shieldPack";
 	className = "Backpack";
-   heading = "cBackpacks";
-	shadowDetailMask = 4;
+	description = "Shield Pack";
+	hiliteOnActive = true;
+	hudIcon = "shieldpack";
 	imageType = ShieldPackImage;
 	price = 175;
-	hudIcon = "shieldpack";
+	shadowDetailMask = 4;
+	shapeFile = "shieldPack";
 	showWeaponBar = true;
-	hiliteOnActive = true;
+  heading = "cBackpacks";
 };
 
 function ShieldPackImage::onActivate(%player,%imageSlot)

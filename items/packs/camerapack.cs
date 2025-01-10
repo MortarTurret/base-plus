@@ -47,7 +47,7 @@ function CameraPack::deployShape(%player,%item)
 {
  	%client = Player::getClient(%player);
 	if($TeamItemCount[GameBase::getTeam(%player) @ %item] < $TeamItemMax[%item]) {
-		if (GameBase::getLOSInfo(%player,3)) {
+		if (GameBase::getLOSInfo(%player,4.5)) {
 			// GetLOSInfo sets the following globals:
 			// 	los::position
 			// 	los::normal
@@ -128,20 +128,21 @@ TurretData CameraTurret
 
 function CameraTurret::onAdd(%this)
 {
-	schedule("CameraTurret::deploy(" @ %this @ ");",1,%this);
-	if (GameBase::getMapName(%this) == "") {
-		GameBase::setMapName (%this, "Camera");
+	schedule("CameraTurret::deploy(" @ %this @ ");", 1, %this);
+
+	if(GameBase::getMapName(%this) == "") {
+		GameBase::setMapName(%this, "Camera");
 	}
 }
 
 function CameraTurret::deploy(%this)
 {
-	GameBase::playSequence(%this,1,"deploy");
+	GameBase::playSequence(%this, 1, "deploy");
 }
 
 function CameraTurret::onEndSequence(%this,%thread)
 {
-	GameBase::setActive(%this,true);
+	GameBase::setActive(%this, true);
 }
 
 function CameraTurret::onDestroyed(%this)

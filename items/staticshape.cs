@@ -8,16 +8,17 @@
 
 function StaticShape::onPower(%this,%power,%generator)
 {
-	if (%power) 
-		GameBase::playSequence(%this,0,"power");
+	if(%power) 
+		GameBase::playSequence(%this, 0,"power");
 	else 
-		GameBase::stopSequence(%this,0);
+		GameBase::stopSequence(%this, 0);
 }
 
 function StaticShape::onEnabled(%this)
 {
-	if (GameBase::isPowered(%this)) 
-		GameBase::playSequence(%this,0,"power");
+	if(GameBase::isPowered(%this) || %this.hotwired) {
+		GameBase::playSequence(%this, 0 ,"power");
+  }
 }
 
 function StaticShape::onDisabled(%this)
@@ -34,34 +35,22 @@ function StaticShape::onDestroyed(%this)
 }
 
 function StaticShape::onDamage( %this, %type, %value, %pos, %vec, %mom, %object ) {
-	%name = GameBase::getDataName(%this);
-	%ccdx_solar = ( ( %name == SolarPanel ) && ( $MissionName == "CanyonCrusade_deluxe" || $missionName == "CanyonCrusade" ) );
-	%class = ( ( %name.className == Generator && !%ccdx_solar ) || ( %name.className == Station && %name != VehiclePad && %name != VehicleStation ) );
-	%sameteam = ( GameBase::getTeam( %this ) == GameBase::getTeam( %object ) );
-	
-	if( !%sameteam && %class && !$Server::AllowRape ) {
-		%lim = $Server::antiRape::minTeamSize;
-		%cl = Player::GetClient( %object );
-		if ( %cl.rapemsgs++ % 4 == 0 )
-			Client::SendMessage(%cl, 1, "No base destroying until teams are at least " @ %lim @ "v" @ %lim @ "~wLeftMissionArea.wav" );
-		return;
-	}
-	
 	%damageLevel = GameBase::getDamageLevel(%this);
 	%dValue = %damageLevel + %value;
-   %this.lastDamageObject = %object;
-   %this.lastDamageTeam = GameBase::getTeam(%object);
+  %this.lastDamageObject = %object;
+  %this.lastDamageTeam = GameBase::getTeam(%object);
+
 	if(GameBase::getTeam(%this) == GameBase::getTeam(%object)) {
 		%name = GameBase::getDataName(%this);
+
 		if(%name.className == Generator || %name.className == Station) { 
 			%TDS = $Server::TeamDamageScale;
 			%dValue = %damageLevel + %value * %TDS;
 			%disable = GameBase::getDisabledDamage(%this);
-			if(!$Server::TourneyMode && %dValue > %disable - 0.05) {
-            if(%damageLevel > %disable - 0.05)
-               return;
-            else
-               %dValue = %disable - 0.05;
+
+			if(%dValue > %disable - 0.05) {
+        if(%damageLevel > %disable - 0.05) return;
+        else %dValue = %disable - 0.05;
 			}
 		}
 	}
@@ -71,22 +60,20 @@ function StaticShape::onDamage( %this, %type, %value, %pos, %vec, %mom, %object 
 function StaticShape::shieldDamage(%this,%type,%value,%pos,%vec,%mom,%object)
 {
 	%damageLevel = GameBase::getDamageLevel(%this);
-   %this.lastDamageObject = %object;
-   %this.lastDamageTeam = GameBase::getTeam(%object);
-	if (%this.shieldStrength) {
+  %this.lastDamageObject = %object;
+  %this.lastDamageTeam = GameBase::getTeam(%object);
+	
+  if(%this.shieldStrength) {
 		%energy = GameBase::getEnergy(%this);
-		%strength = %this.shieldStrength;
-		if (%type == $GrenadeDamageType)
-			%strength *= 0.5;
-		else
-			if (%type == $MortarDamageType)
-				%strength *= 0.25;
-			else
-				if (%type == $BlasterDamageType)
-					%strength *= 2.0;
+		%strength = (%type == $GrenadeDamageType) ? 0.5 : 
+      (%type == $MortarDamageType) ? 0.25 : 
+      (%type == $BlasterDamageType) ? 2.0 : 
+      %this.shieldStrength;
 		%absorb = %energy * %strength;
+
 		if (%value < %absorb) {
 			GameBase::setEnergy(%this,%energy - (%value / %strength));
+
 			%centerPos = getBoxCenter(%this);
 			%sphereVec = findPointOnSphere(getBoxCenter(%object),%centerPos,%vec,%this);
 			%centerPosX = getWord(%centerPos,0);
@@ -102,18 +89,73 @@ function StaticShape::shieldDamage(%this,%type,%value,%pos,%vec,%mom,%object)
 			%newVecZ = %centerPosZ - %pointZ;
 			%norm = Vector::normalize(%newVecX @ " " @ %newVecY @ " " @ %newVecZ);
 			%zOffset = 0;
-			if(GameBase::getDataName(%this) == PulseSensor)
+
+			if(GameBase::getDataName(%this) == PulseSensor) {
 				%zOffset = (%pointZ-%centerPosZ) * 0.5;
-			GameBase::activateShield(%this,%sphereVec,%zOffset);
+      }
+
+      if(GameBase::getTeam(%this) == GameBase::getTeam(%object)) {
+        if(!GameBase::isPowered(%this)) {
+          if(%this.hotwirable) {
+            StaticShape::onDamage(%this, %type, 0, %pos, %vec, %mom, %object);
+          }
+
+          else {
+  			    StaticShape::onDamage(%this, %type, %value - %absorb, %pos, %vec, %mom, %object);
+          }
+        }
+
+        else {
+  			  StaticShape::onDamage(%this, %type, %value - %absorb, %pos, %vec, %mom, %object);
+        }
+      }
+
+      else {
+        if(%this.Energy > 0) {
+          GameBase::activateShield(%this, %sphereVec, %zOffset);
+        }
+
+        else {
+		      StaticShape::onDamage(%this, %type, %value, %pos, %vec, %mom, %object);
+        }
+      }
 		}
+
 		else {
 			GameBase::setEnergy(%this,0);
-			StaticShape::onDamage(%this,%type,%value - %absorb,%pos,%vec,%mom,%object);
+      StaticShape::onDamage(%this, %type, %value - %absorb, %pos, %vec, %mom, %object);
 		}
 	}
+
 	else {
-		StaticShape::onDamage(%this,%type,%value,%pos,%vec,%mom,%object);
+		StaticShape::onDamage(%this, %type, %value, %pos, %vec, %mom, %object);
 	}
+
+  /*
+  
+
+	else {
+    if(GameBase::getTeam(%this) == GameBase::getTeam(%object)) {
+      if(!GameBase::isPowered(%this)) {
+        if(%this.hotwirable) {
+          StaticShape::onDamage(%this, %type, 0, %pos, %vec, %mom, %object);
+        }
+
+        else {
+          StaticShape::onDamage(%this, %type, %value - %absorb, %pos, %vec, %mom, %object);
+        }
+      }
+
+      else {
+        StaticShape::onDamage(%this, %type, %value - %absorb, %pos, %vec, %mom, %object);
+      }
+    }
+
+    else {
+		  StaticShape::onDamage(%this, %type, %value, %pos, %vec, %mom, %object);
+    }
+	}
+   */
 }
 
 StaticShapeData FlagStand
@@ -173,8 +215,9 @@ function Generator::onDisabled(%this)
 function Generator::onDestroyed(%this)
 {
 	Generator::onDisabled(%this);
-   StaticShape::objectiveDestroyed(%this);
-	calcRadiusDamage(%this, $DebrisDamageType, 2.5, 0.05, 25, 13, 3, 0.55, 
+  StaticShape::objectiveDestroyed(%this);
+	
+  calcRadiusDamage(%this, $DebrisDamageType, 2.5, 0.05, 25, 13, 3, 0.55, 
 		0.30, 250, 170); 
 }
 
@@ -189,8 +232,6 @@ function Generator::onDeactivate(%this)
 	GameBase::stopSequence(%this,0);
  	GameBase::generatePower(%this, false);
 }
-
-//
 
 StaticShapeData TowerSwitch
 {
@@ -236,31 +277,31 @@ StaticShapeData SolarPanel
 
 StaticShapeData PortGenerator
 {
-   description = "Portable Generator";
-   shapeFile = "generator_p";
-	className = "Generator";
-	debrisId = flashDebrisSmall;
-   sfxAmbient = SoundGeneratorPower;
-   maxDamage = 1.6;
-	mapIcon = "M_generator";
-	damageSkinData = "objectDamageSkins";
-	shadowDetailMask = 16;
-	explosionId = flashExpMedium;
-	visibleToSensor = true;
-	mapFilter = 4;
+  description = "Portable Generator";
+  shapeFile = "generator_p";
+  className = "Generator";
+  debrisId = flashDebrisSmall;
+  sfxAmbient = SoundGeneratorPower;
+  maxDamage = 1.6;
+  mapIcon = "M_generator";
+  damageSkinData = "objectDamageSkins";
+  shadowDetailMask = 16;
+  explosionId = flashExpMedium;
+  visibleToSensor = true;
+  mapFilter = 4;
 };
 
 
 //------------------------------------------------------------------------
 StaticShapeData SmallAntenna
 {
-	shapeFile = "anten_small";
-	debrisId = defaultDebrisSmall;
-	maxDamage = 1.0;
-	damageSkinData = "objectDamageSkins";
-	shadowDetailMask = 16;
-	explosionId = flashExpMedium;
-   description = "Small Antenna";
+  shapeFile = "anten_small";
+  debrisId = defaultDebrisSmall;
+  maxDamage = 1.0;
+  damageSkinData = "objectDamageSkins";
+  shadowDetailMask = 16;
+  explosionId = flashExpMedium;
+  description = "Small Antenna";
 };
 
 //------------------------------------------------------------------------

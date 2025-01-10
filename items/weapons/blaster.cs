@@ -47,10 +47,7 @@ BulletData BlasterBolt
    rotationPeriod = 1;
 };
 
-
-
 //----------------------------------------------------------------------------
-
 ItemImageData BlasterImage
 {
    shapeFile  = "energygun";

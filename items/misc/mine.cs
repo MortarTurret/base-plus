@@ -1,7 +1,7 @@
 $weapon = "Mine";
 $ammo = "MineAmmo";
-$SellAmmo[$ammo] = 5; // sell or drop amount
-$AmmoPackMax[$ammo] = 5;
+$SellAmmo[$ammo] = 2; // sell or drop amount
+$AmmoPackMax[$ammo] = 6;
 Item::AddDamageType( "Mine" );
 
 ExplosionData mineExp

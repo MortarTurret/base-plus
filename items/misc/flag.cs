@@ -26,10 +26,10 @@ ItemImageData FlagImage
 ItemData Flag
 {
 	description = "Flag";
-	shapeFile = "flag";
 	imageType = FlagImage;
-	showInventory = false;
 	shadowDetailMask = 4;
+	shapeFile = "flag";
+	showInventory = false;
 
 	lightType = 2;   // Pulsing
 	lightRadius = 4;

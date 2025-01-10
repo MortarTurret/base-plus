@@ -8,8 +8,8 @@ ItemImageData EnergyPackImage
 	mountPoint = 2;
 	mountOffset = { 0, -0.1, 0 };
 
-	minEnergy = -1;
- 	maxEnergy = -3;
+	minEnergy = -2;
+ 	maxEnergy = -5;
 	firstPerson = false;
 };
 

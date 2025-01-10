@@ -48,7 +48,7 @@ function DeployableAmmoPack::deployShape(%player,%item)
 {
 	%client = Player::getClient(%player);
 	if($TeamItemCount[GameBase::getTeam(%player) @ %item] < $TeamItemMax[%item]) {
-		if (GameBase::getLOSInfo(%player,3)) {
+		if (GameBase::getLOSInfo(%player,4.5)) {
 			%obj = getObjectType($los::object);
 			if (%obj == "SimTerrain" || %obj == "InteriorShape") {
 				if (Vector::dot($los::normal,"0 0 1") > 0.7) {

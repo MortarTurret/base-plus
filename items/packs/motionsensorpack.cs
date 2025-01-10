@@ -48,7 +48,7 @@ function MotionSensorPack::deployShape(%player,%item)
 {
  	%client = Player::getClient(%player);
 	if($TeamItemCount[GameBase::getTeam(%player) @ %item] < $TeamItemMax[%item]) {
-		if (GameBase::getLOSInfo(%player,3)) {
+		if (GameBase::getLOSInfo(%player,4.5)) {
 			// GetLOSInfo sets the following globals:
 			// 	los::position
 			// 	los::normal

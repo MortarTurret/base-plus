@@ -19,7 +19,6 @@ ExplosionData energyExp
    shiftPosition = True;
 };
 
-
 //--------------------------------------
 BulletData MiniFusionBolt
 {
@@ -42,45 +41,46 @@ BulletData MiniFusionBolt
    rotationPeriod = 1;
 };
 
-
 //--------------------------------------------
-
 TurretData DeployableTurret
 {
-	className = "Turret";
-	shapeFile = "remoteturret";
-	projectileType = MiniFusionBolt;
-	maxDamage = 0.65;
-	maxEnergy = 60;
-	minGunEnergy = 6;
-	maxGunEnergy = 5;
-	sequenceSound[0] = { "deploy", SoundActivateMotionSensor };
-	reloadDelay = 0.4;
-	speed = 4.0;
-	speedModifier = 1.5;
-	range = 30;
-	visibleToSensor = true;
-	shadowDetailMask = 4;
-	dopplerVelocity = 0;
+	activationSound = SoundRemoteTurretOn;
 	castLOS = true;
-	supression = false;
+	className = "Turret";
+	damageSkinData = "objectDamageSkins";
+	deactivateSound = SoundRemoteTurretOff;
+	debrisId = flashDebrisMedium;
+	description = "Remote Turret";
+	dopplerVelocity = 0;
+	explosionId = flashExpMedium;
+	fireSound = SoundRemoteTurretFire;
 	mapFilter = 2;
 	mapIcon = "M_turret";
-	debrisId = flashDebrisMedium;
+	maxDamage = 0.65;
+	maxEnergy = 60;
+	maxGunEnergy = 5;
+	minGunEnergy = 6;
+	projectileType = MiniFusionBolt;
+	range = 30;
+	reloadDelay = 0.4;
+	sequenceSound[0] = { "deploy", SoundActivateMotionSensor };
+	shadowDetailMask = 4;
+	shapeFile = "remoteturret";
 	shieldShapeName = "shield";
-	fireSound = SoundRemoteTurretFire;
-	activationSound = SoundRemoteTurretOn;
-	deactivateSound = SoundRemoteTurretOff;
-	explosionId = flashExpMedium;
-	description = "Remote Turret";
-	damageSkinData = "objectDamageSkins";
+	speed = 4.0;
+	speedModifier = 1.5;
+	supression = false;
+	visibleToSensor = true;
 };
 
 function DeployableTurret::onAdd(%this)
 {
-	schedule("DeployableTurret::deploy(" @ %this @ ");",1,%this);
-	GameBase::setRechargeRate(%this,5);
+	schedule("DeployableTurret::deploy(" @ %this @ ");", 1, %this);
+
+	GameBase::setRechargeRate(%this, 5);
+
 	%this.shieldStrength = 0;
+
 	if (GameBase::getMapName(%this) == "") {
 		GameBase::setMapName (%this, "Remote Turret");
 	}
@@ -88,7 +88,7 @@ function DeployableTurret::onAdd(%this)
 
 function DeployableTurret::deploy(%this)
 {
-	GameBase::playSequence(%this,1,"deploy");
+	GameBase::playSequence(%this, 1, "deploy");
 }
 
 function DeployableTurret::onEndSequence(%this,%thread)
@@ -99,11 +99,13 @@ function DeployableTurret::onEndSequence(%this,%thread)
 function DeployableTurret::onDestroyed(%this)
 {
 	Turret::onDestroyed(%this);
-  	$TeamItemCount[GameBase::getTeam(%this) @ "TurretPack"]--;
+
+  $TeamItemCount[GameBase::getTeam(%this) @ "TurretPack"]--;
 }
 
 // Override base class just in case.
 function DeployableTurret::onPower(%this,%power,%generator) {}
+
 function DeployableTurret::onEnabled(%this) 
 {
 	GameBase::setRechargeRate(%this,5);
