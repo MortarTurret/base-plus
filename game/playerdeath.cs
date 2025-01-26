@@ -76,6 +76,12 @@ $deathMsg[-2,1]						 = "%1 takes %2 own life.";
 $deathMsg[-2,2]						 = "%1 kills %2 own dumb self.";
 $deathMsg[-2,3]						 = "%1 decides to see what the afterlife is like.";
 
+//- Special suicide messaging: Overheating from Plasma Damage
+$deathMsg[-3,0]						 = "%1 couldn't take the heat.";
+$deathMsg[-3,1]						 = "%1 flew too close to the sun.";
+$deathMsg[-3,2]						 = "%1 had a meltdown.";
+$deathMsg[-3,3]						 = "%1 melted under pressure.";
+
 $numDeathMsgs = 4;
 //---------------------------------------------------------------------------------
 
@@ -103,12 +109,22 @@ function Client::onKilled( %victim, %killer, %damageType ) {
 		Event::Trigger( eventServerClientDied, %victim, %damageType );
 		
 		message::all( 0, %victimName ~ " dies.", $DeathMessageMask );
-	} else if ( %killer == %victim ) {
+	} 
+  
+  else if ( %killer == %victim ) {
 		Event::Trigger( eventServerClientSuicided, %victim, %damageType );
-		
-		%msg = sprintf( $deathMsg[-2, %ridx], %victimName, %victimGender );
+
+    %msg = sprintf( $deathMsg[-2, %ridx], %victimName, %victimGender );
+    %player = Client::getOwnedObject(%victim);
+
+    if(%player.__hot && %damageType == $PlasmaDamageType) {
+      %msg = sprintf( $deathMsg[-3, %ridx], %victimName, %victimGender );
+    }
+
 		message::all( 0, %msg, $DeathMessageMask );
-	} else {
+	} 
+  
+  else {
 		if( $teamplay && (Client::getTeam(%killer) == Client::getTeam(%victim)) ) {
 			Event::Trigger( eventServerClientTeamKilled, %killer, %victim, %damageType );
 			

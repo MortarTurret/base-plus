@@ -17,10 +17,365 @@ $CorpseTimeoutValue = 22;
 //----------------------------------------------------------------------------
 
 // Player & Armor data block callbacks
-
 function Player::onAdd(%this) {
-	GameBase::setRechargeRate(%this,8);
+	GameBase::setRechargeRate(%this, 8);
+
+  //- -------------------------------- -//
+  //- New properties for Player object -//
+  //- -------------------------------- -//
+  {
+    //- Static Properties
+    //- -----------------
+    //- NOTE: These props DO NOT update within the `::__updateAttrs()` cycle
+    {
+      %client = Player::getClient(%this);
+
+      %this.__name = Client::getName(%client);
+      %this.__pronoun = Client::getPronoun(%client);
+    }
+
+    //- Live Properties
+    //- ---------------
+    //- NOTE: These props DO update within the `::__updateAttrs()` cycle
+    {
+      %this.__alive = false;          // Boolean: True if the player is currently alive
+      %this.__ammo = 0;               // Integer: Player's current ammo for equipped weapon
+      %this.__ammoType = "";          // String: Type of ammo used by Player's equipped weapon
+      %this.__armor = "Light";        // String: Player's equipped armor
+      %this.__energy = 0;             // Integer: Player's current energy percentage
+      %this.__firing = false;         // Boolean: True if the Player is actively firing
+      %this.__firingFor = 0.0;        // Float: How the long player has been firing for
+      %this.__health = 0;             // Integer: Player's current health percentage
+      %this.__heat = 0.0;             // Float: Player's current heat factor for missiles
+      %this.__hot = false;            // Boolean: True if hte Player's heat is > 0.5
+      %this.__hotFor = 0.0;           // Float: How long the Player has been hot for
+      %this.__jetting = false;        // Boolean: True if Player is currently jetting
+      %this.__jettingFor = 0.0;       // Float: How long the Player has been jetting for
+      %this.__lastDamaged = 0.0;      // Float: Seconds since the Player was last damaged 
+      %this.__lastFire = 0.0;         // Float: Seconds since the Player last fired
+      %this.__lastHot = 0.0;          // Float: Seconds since the Player was last hot
+      %this.__lastJet = 0.0;          // Float: Seconds since the Player last jetted
+      %this.__lastTarget = 0.0;       // Float: Seconds since the Player last targeted
+      %this.__lastTrigger = 0.0;      // Float: Seconds since the Player last triggered
+      %this.__pack = "";              // String: Player's equipped pack
+      %this.__targeting = "";         // String: ID of entity Player is currently targeting via ELF, Repair or TargetLaser
+      %this.__targetingFor = 0.0;     // Float: How long the Player has been targeting for
+      %this.__triggering = false;     // Boolean: True if the player is holding trigger
+      %this.__triggeringFor = 0.0;    // Float: How long the player has been holding trigger
+      %this.__weapon = "";            // String: Player's equipped weapon
+      %this.__weaponCanHeat = false;  // String: Firing heat factor (for scaling accuracy COF)
+      %this.__weaponHeat = 0.0;       // Float: Firing heat factor (for scaling accuracy COF)
+    }
+
+    Player::__updateAttrs(%this);
+  }
 }
+
+//----------------------------------------------------------------------------//
+//- New method for tracking player metadata                                  -//
+//----------------------------------------------------------------------------//
+function Player::__updateAttrs(%this, %bypassCycle) {
+
+  //- --------------------------------------------------------- -//
+  //- If the match hasn't started yet, don't update player data -//
+  //- --------------------------------------------------------- -//
+  {
+    //- NOTE: This helps eliminate unwanted behavior from certain built-in 
+    //- methods due to how Dynamix decided to code them.  
+    if(!$matchStarted) {
+      schedule("Player::__updateAttrs(" @ %this @ ");", 0.1);
+
+      return;
+    }
+  }
+
+  //- ---------------------------------------------- -//
+  //- Method scope: Setup shared vars for submethods -//
+  //- ---------------------------------------------- -//
+  %client = Player::getClient(%this);
+  %time = getSimTime();
+
+  //- ---------------------------------- -//
+  //- Local scope: Update equipped armor -//
+  //- ---------------------------------- -//
+  {
+    %this.__alive = (Player::isDead(%this)) ? false : true;
+  }
+
+  //- ---------------------------------- -//
+  //- Local scope: Update equipped armor -//
+  //- ---------------------------------- -//
+  {
+    %armor = Player::getArmor(%this);
+
+    %this.__armor = (%armor == "larmor" || %armor == "lfemale") ? "Light" : 
+      (%armor == "marmor" || %armor == "mfemale") ? "Medium" : "Heavy";
+  }
+
+  //- ------------------------------------- -//
+  //- Local scope: Update health and energy -//
+  //- ------------------------------------- -//
+  {
+    %diff = GameBase::getDataName(%this).maxDamage - GameBase::getDamageLevel(%this);
+    %diff = round(%diff * 100);
+    %this.__health = (%this.__alive) ? %diff : 0;
+
+    %diff = GameBase::getEnergy(%this) / GameBase::getDataName(%this).maxEnergy;
+    %diff = round(%diff * 100);
+    %this.__energy = (%this.__alive) ? %diff : 0;
+  }
+  
+  //- ----------------------------------- -//
+  //- Local scope: Update equipped weapon -//
+  //- ----------------------------------- -//
+  {
+    %this.__weapon = (%this.__alive) ? 
+      Player::getMountedItem(%this, $WeaponSlot) : "";
+  }
+    
+  //- -------------------------------------------- -//
+  //- Local scope: Update current weapon ammo pool -//
+  //- -------------------------------------------- -//
+  {
+    %weapon = Player::getMountedItem(%this, $WeaponSlot);
+    %ammoCount = "Infinite";
+
+    if(%this.__alive) {
+      if(%weapon != "") {
+        %this.__ammoType = %weapon.imageType.ammoType;
+      }
+
+      else {
+        %this.__ammoType = "";
+      }
+
+      if(%this.__ammoType != "") {
+        %ammoCount = Player::getItemCount(%this, %this.__ammoType);
+      }
+    }
+
+    %this.__ammo = %ammoCount;
+  }
+  
+  //- --------------------------------- -//
+  //- Local scope: Update equipped pack -//
+  //- --------------------------------- -//
+  {
+    %this.__pack = (%this.__alive) ? 
+      Player::getMountedItem(%this, $BackpackSlot) : "";
+  }
+
+  //- ------------------------------------------------------ -//
+  //- Local scope: Update trigger/fire/target (TFT) statuses -//
+  //- ------------------------------------------------------ -//
+  {
+    if(Player::isTriggered(%this, $WeaponSlot)) {
+      if(%this.__alive) { 
+        %this.__triggering = true;
+
+        if(%this.__ammo == "Infinite" || %this.__ammo > 0) {
+          %this.__firing = true;
+        }
+
+        else {
+          %this.__firing = false;
+        }
+      }
+
+      else {
+        %this.__firing = false;
+        %this.__targeting = "";
+        %this.__triggering = false;
+      }
+    }
+
+    else {
+      %this.__firing = false;
+      %this.__targeting = "";
+      %this.__triggering = false;
+    }
+  }
+
+  //- -------------------------------------------------- -//
+  //- Local scope: Update last TFT clocks and timestamps -//
+  //- -------------------------------------------------- -//
+  {
+    %diff = 0;
+
+    //- Triggering
+    //- ----------
+    //- NOTE: This is True whenever the player holds down the Fire button,
+    //- regardless of whether or not their weapon is actually firing.
+    {
+      if(%this.__triggering) {
+        %diff = %time - %this.__lastTrigger;
+
+        if(%this.__lastTrigger == 0 || !%this.__triggering) {
+          %diff = 0;
+        }
+
+        %this.__lastTrigger = %time;
+        %this.__triggeringFor = %diff + %this.__triggeringFor;
+        %this.__triggeringFor = GameBase::adjustFloatPrecision(%this.__triggeringFor, 2);
+      }
+
+      else {
+        %this.__triggeringFor = 0;
+      }
+    }
+
+    //- Firing
+    //- ------
+    //- NOTE: This is True whenever the player holds down the Fire button AND 
+    //- their weapon is actually firing.
+    {
+      if(%this.__firing) {
+        %diff = %time - %this.__lastFire;
+
+        if(%this.__lastFire == 0 || !%this.__firing) {
+          %diff = 0;
+        }
+
+        %this.__lastFire = %time;
+        %this.__firingFor = %diff + %this.__firingFor;
+        %this.__firingFor = GameBase::adjustFloatPrecision(%this.__firingFor, 2);
+        %this.__weaponHeat = %this.__weaponHeat + 0.025 * sqrt(%this.__weaponHeat + 1);
+      }
+
+      else {
+        %this.__firingFor = 0;
+        %this.__weaponHeat = %this.__weaponHeat - 0.02 * sqrt(%this.__weaponHeat + 1);
+      }
+    
+      //- Weapon Heat Clamp
+      {
+        %this.__weaponHeat = (%this.__weaponHeat >= 1) ? 1 : 
+          (%this.__weaponHeat <= 0) ? 0 : %this.__weaponHeat;
+      }
+    }
+
+    //- Targeting
+    //- ---------
+    //- NOTE: This works but... it's buggy because the Lightning built-in 
+    //- doesn't seem to have a hookable method for ::determineTarget
+    {
+      if(%this.__targeting) {
+        %diff = %time - %this.__lastTarget;
+
+        if(%this.__lastTarget == 0 || !%this.__targeting) {
+          %diff = 0;
+        }
+
+        %this.__lastTarget = %time;
+        %this.__targetingFor = %diff + %this.__targetingFor;
+        %this.__targetingFor = GameBase::adjustFloatPrecision(%this.__targetingFor, 2);
+      }
+
+      else {
+        %this.__targetingFor = 0;
+      }
+    }
+  }
+
+  //- -------------------------------------- -//
+  //- Local scope: Update current jet status -//
+  //- -------------------------------------- -//
+  {
+    if(%this.__alive) {
+      %diff = 0;
+
+      %this.__jetting = Player::isJetting(%this);
+      %this.__jetting = (GameBase::getEnergy(%this) > 0) ? %this.__jetting : false;
+  
+      if(%this.__jetting) {
+        %diff = %time - %this.__lastJet;
+
+        if(%this.__lastJet == 0 || !%this.__jetting) {
+          %diff = 0;
+        }
+
+        %this.__lastJet = %time;
+        %this.__jettingFor = %diff + %this.__jettingFor;
+        %this.__jettingFor = GameBase::adjustFloatPrecision(%this.__jettingFor, 2);
+      }
+
+      else {
+        %this.__jettingFor = 0;
+      } 
+    }
+
+    else {
+      %this.__jettingFor = 0;
+    }
+  }
+
+  //- ------------------------------------------------------ -//
+  //- Local scope: Update current heat factor (for missiles) -//
+  //- ------------------------------------------------------ -//
+  {
+    //- HeatFactor 
+    //- ----------
+    {
+      //- Adjustable heat ramps based on equipped armor! This means 
+      //- that light armors will heat up faster, but also cool down 
+      //- faster and heavies heat up slower, but also stay hot longer.
+      //- ------------------------------------------------------------------
+      //- NOTE: The heatRate, coolRate and headIndex values should probably 
+      //- be moved into the armor scripts... but they're fine here, for now.
+
+      %heatFactor = %this.__heat;
+
+      %heatRate = (%this.__armor == "Light") ? 0.1 : 
+                  (%this.__armor == "Heavy") ? 0.05 : 0.08;
+
+      %coolRate = (%this.__armor == "Light") ? 0.08 : 
+                  (%this.__armor == "Heavy") ? 0.05 : 0.06;
+
+      %heatFactor = (%this.__jetting) ? %heatFactor + %heatRate : %heatFactor - %coolRate;
+      %heatFactor = clamp(0, %heatFactor, 1);
+
+      %this.__heat = %heatFactor;
+    }
+
+    //- Hot Checks
+    //- ----------
+    {
+      //- Armor weight directly relates to heat retention; heavy armor triggers 
+      //- turret and plasma heat checks earlier.
+      %heatIndex = (%this.__armor == "Light") ? 0.80 : 
+                  (%this.__armor == "Heavy") ? 0.55 : 0.067;
+
+      %this.__hot = (%this.__heat > %heatIndex) ? true : false;
+
+      %diff = 0;
+
+      if(%this.__hot) {
+        %diff = %time - %this.__lastHot;
+
+        if(%this.__lastHot == 0 || !%this.__hot) {
+          %diff = 0;
+        }
+
+        %this.__lastHot = %time;
+        %this.__hotFor = %diff + %this.__hotFor;
+      }
+
+      else {
+        %this.__hotFor = 0;
+      }
+    }
+  }
+
+  //- ----------------------------------------- -//
+  //- Method scope: Call method n times/second. -//
+  //- ----------------------------------------- -//
+  schedule("Player::__updateAttrs(" @ %this @ ");", 0.1);
+}
+//----------------------------------------------------------------------------//
+//----------------------------------------------------------------------------//
+
+
+
 
 function Player::onRemove(%this) {
 	// Drop anything left at the players pos
@@ -82,15 +437,20 @@ function Player::onKilled( %this ) {
 function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %quadrant, %object ) {
 	if ( !Player::isExposed(%this) )
 		return;
-	
+
+  error(%vertPos);
+  error(%quadrant);
+
 	%damagedClient = Player::getClient(%this);
 	%shooterClient = %object;
 	%shooterName = Client::getName( %shooterClient );
 
 	Player::applyImpulse(%this,%mom);
+
 	if($teamplay && %damagedClient != %shooterClient && Client::getTeam(%damagedClient) == Client::getTeam(%shooterClient) ) {
 		if (%shooterClient != -1) {
 			%curTime = getSimTime();
+
 			if ((%curTime - %this.DamageTime > 3.5 || %this.LastHarm != %shooterClient) && %damagedClient != %shooterClient && $Server::TeamDamageScale > 0) {
 				if(%type != $MineDamageType) {
 					Client::sendMessage(%shooterClient,0,"You just harmed Teammate " @ Client::getName(%damagedClient) @ "!");
@@ -99,19 +459,25 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 					Client::sendMessage(%shooterClient,0,"You just harmed Teammate " @ Client::getName(%damagedClient) @ " with your mine!");
 					Client::sendMessage(%damagedClient,0,"You just stepped on Teamate " @ Client::getName(%shooterClient) @ "'s mine!");
 				}
+
 				%this.LastHarm = %shooterClient;
 				%this.DamageStamp = %curTime;
 			}
 		}
 		%friendFire = $Server::TeamDamageScale;
-	} else if ( %type == $ImpactDamageType && Client::getTeam(%object.clLastMount) == Client::getTeam(%damagedClient) ) {
+	}
+  
+  else if ( %type == $ImpactDamageType && Client::getTeam(%object.clLastMount) == Client::getTeam(%damagedClient) ) {
 		%friendFire = $Server::TeamDamageScale;
-	} else {
+	}
+  
+  else {
 		%friendFire = 1.0;	
 	}
 
 	if (!Player::isDead(%this)) {
 		%armor = Player::getArmor(%this);
+
 		//More damage applyed to head shots
 		if(%vertPos == "head" && %type == $LaserDamageType) {
 			if(%armor == "harmor") { 
@@ -142,6 +508,23 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 			}
 		}
 
+    else {
+      if(%type == $PlasmaDamageType) {
+        //- Plasma Damage now increases the heatFactor on players it hits.
+        %this.__heat = clamp(0, %this.__heat + 0.1 * (%this.__heat + 1), 1);
+
+        //- If the player is hot (__heat over 0.5), then apply extra damage 
+        //- based on their heatFactor
+        if(%this.__hot) {
+          %damageLevel = GameBase::getDamageLevel(%this) + (%this.__heat * 0.1);
+
+          GameBase::setDamageLevel(%this, %damageLevel);
+        }
+
+        error(%this.__heat);
+      } 
+    }
+
 		if (%value) {
 			%value = $DamageScale[%armor, %type] * %value * %friendFire;
 			%dlevel = GameBase::getDamageLevel(%this) + %value;
@@ -168,13 +551,18 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 					%damagedClient.lastdamage = getSimTime() + 1.5;
 				}
 			} else {
-				if(%spillOver > 0.5 && (%type== $DiscDamageType || %type == $GrenadeDamageType || %type== $MortarDamageType|| %type == $RocketDamageType)) {
+				if((%spillOver > 0.5 && (%type == $DiscDamageType || %type == $GrenadeDamageType || %type== $MortarDamageType|| %type == $RocketDamageType)) || (%this.__heat >= 1 && %type == $PlasmaDamageType)) {
 					Player::trigger(%this, $WeaponSlot, false);
 					%weaponType = Player::getMountedItem(%this,$WeaponSlot);
-					if(%weaponType != -1)
+
+					if(%weaponType != -1) {
 						Player::dropItem(%this,%weaponType);
+          }
+
 					Player::blowUp(%this);
-				} else {
+				}
+        
+        else {
 					if ((%value > 0.40 && (%type== $DiscDamageType || %type == $GrenadeDamageType || %type== $MortarDamageType || %type == $RocketDamageType )) || (Player::getLastContactCount(%this) > 6) ) {
 						if(%quadrant == "front_left" || %quadrant == "front_right") 
 							%curDie = $PlayerAnim::DieBlownBack;
@@ -240,24 +628,7 @@ function Player::onCollision( %this, %object ) {
 }
 
 function Player::getHeatFactor(%this) {
-	// Hack to avoid turret turret not tracking vehicles.
-	// Assumes that if we are not in the player we are
-	// controlling a vechicle, which is not always correct
-	// but should be OK for now.
-	%client = Player::getClient(%this);
-	if (Client::getControlObject(%client) != %this)
-		return 1.0;
-
-   %time = getIntegerTime(true) >> 5;
-   %lastTime = Player::lastJetTime(%this) >> 10;
-
-   if ((%lastTime + 1.5) < %time) {
-      return 0.0;
-   } else {
-      %diff = %time - %lastTime;
-      %heat = 1.0 - (%diff / 1.5);
-      return %heat;
-   }
+  return %this.__hot;
 }
 
 function Player::jump( %this,%mom ) {
