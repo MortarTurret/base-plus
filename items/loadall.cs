@@ -42,9 +42,12 @@ run("repairpatch");
 // now items not defining damage types, but referencing them
 rundir( "server/items/armors/" );
 run("armordamageskins");
-run("lightarmor");
-run("mediumarmor");
-run("heavyarmor");
+run("armorconfig");
+run("marmor");
+run("mfemale");
+run("larmor");
+run("lfemale");
+run("harmor");
 
 rundir( "server/items/packs/" );
 run("ammopack");

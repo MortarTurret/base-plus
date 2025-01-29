@@ -1,3 +1,5 @@
+exec( "server/util/math" );
+
 exec( "server/game/mission" );
 exec( "server/game/player" );
 exec( "server/game/playerspawn" );
