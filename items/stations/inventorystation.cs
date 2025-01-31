@@ -5,6 +5,7 @@ $InvList[Disclauncher] = 1;
 $InvList[GrenadeLauncher] = 1;
 $InvList[Mortar] = 1;
 $InvList[PlasmaGun] = 1;
+$InvList[FlameThrower] = 1;
 $InvList[LaserRifle] = 1;
 $InvList[EnergyRifle] = 1;
 $InvList[TargetingLaser] = 1;

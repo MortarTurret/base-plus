@@ -27,6 +27,7 @@ run("grenadelauncher");
 run("laserrifle");
 run("mortar");
 run("plasmagun");
+run("flamethrower");
 run("repairgun");
 run("targetinglaser");
 

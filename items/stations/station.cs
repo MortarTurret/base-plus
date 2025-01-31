@@ -190,13 +190,17 @@ function Station::itemsToResupply(%player)
 {
 	%cnt = 0;
 	%cnt = %cnt + AmmoStation::resupply(%player,"",RepairPatch,1);
-	%cnt = %cnt + AmmoStation::resupply(%player,"",Grenade,2);
+	%cnt = %cnt + AmmoStation::resupply(%player,ChainGun,BulletAmmo,25);
+	%cnt = %cnt + AmmoStation::resupply(%player,DiscLauncher,DiscAmmo,5);
+	%cnt = %cnt + AmmoStation::resupply(%player,GrenadeLauncher,GrenadeAmmo,5);
+	%cnt = %cnt + AmmoStation::resupply(%player,Mortar,MortarAmmo,5);
+	%cnt = %cnt + AmmoStation::resupply(%player,PlasmaGun,PlasmaAmmo,10);
+	%cnt = %cnt + AmmoStation::resupply(%player,FlameThrower,PlasmaAmmo,10);
+	%cnt = %cnt + AmmoStation::resupply(%player,"",Grenade,1);
+	%cnt = %cnt + AmmoStation::resupply(%player,"",Mine,1);
+	%cnt = %cnt + AmmoStation::resupply(%player,"",Beacon,1);
 	%cnt = %cnt + AmmoStation::resupply(%player,"",RepairKit,1);
-	%cnt = %cnt + AmmoStation::resupply(%player,ChainGun,BulletAmmo,20);
-	%cnt = %cnt + AmmoStation::resupply(%player,PlasmaGun,PlasmaAmmo,5);
-	%cnt = %cnt + AmmoStation::resupply(%player,GrenadeLauncher,GrenadeAmmo,2);
-	%cnt = %cnt + AmmoStation::resupply(%player,DiscLauncher,DiscAmmo,2);
-	%cnt = %cnt + AmmoStation::resupply(%player,Mortar,MortarAmmo,2);
+
 	return %cnt;
 }
 

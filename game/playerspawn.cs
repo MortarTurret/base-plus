@@ -1,10 +1,16 @@
+//- First, buy the armor
 $spawnBuyList[0] = LightArmor;
-$spawnBuyList[1] = Blaster;
-$spawnBuyList[2] = Chaingun;
-$spawnBuyList[3] = Disclauncher;
-$spawnBuyList[4] = RepairKit;
-$spawnBuyList[5] = "";
 
+// Second, the pack.
+$spawnBuyList[1] = EnergyPack;
+
+//- Then buy extras.
+$spawnBuyList[2] = RepairKit;
+
+//- Then buy weapons.
+$spawnBuyList[3] = LaserRifle;
+$spawnBuyList[4] = Blaster;
+$spawnBuyList[5] = "";
 
 function Game::playerSpawned( %pl, %cl, %armor ) {
 	%cl.spawn = 1;
