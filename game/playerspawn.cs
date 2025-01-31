@@ -2,13 +2,13 @@
 $spawnBuyList[0] = LightArmor;
 
 // Second, the pack.
-$spawnBuyList[1] = EnergyPack;
+$spawnBuyList[1] = RapairPack;
 
 //- Then buy extras.
 $spawnBuyList[2] = RepairKit;
 
 //- Then buy weapons.
-$spawnBuyList[3] = LaserRifle;
+$spawnBuyList[3] = Disclauncher;
 $spawnBuyList[4] = Blaster;
 $spawnBuyList[5] = "";
 
