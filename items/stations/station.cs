@@ -197,7 +197,7 @@ function Station::itemsToResupply(%player)
 	%cnt = %cnt + AmmoStation::resupply(%player,PlasmaGun,PlasmaAmmo,10);
 	%cnt = %cnt + AmmoStation::resupply(%player,FlameThrower,PlasmaAmmo,10);
 	%cnt = %cnt + AmmoStation::resupply(%player,"",Grenade,1);
-	%cnt = %cnt + AmmoStation::resupply(%player,"",Mine,1);
+	%cnt = %cnt + AmmoStation::resupply(%player,"",MineAmmo,1);
 	%cnt = %cnt + AmmoStation::resupply(%player,"",Beacon,1);
 	%cnt = %cnt + AmmoStation::resupply(%player,"",RepairKit,1);
 

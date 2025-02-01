@@ -42,6 +42,7 @@ function Player::onAdd(%this) {
       %this.__ammo = 0;               // Integer: Player's current ammo for equipped weapon
       %this.__ammoType = "";          // String: Type of ammo used by Player's equipped weapon
       %this.__armor = "Light";        // String: Player's equipped armor
+      %this.__crouched = false;       // Boolean: True if the player is crouching
       %this.__energy = 0;             // Integer: Player's current energy percentage
       %this.__firing = false;         // Boolean: True if the Player is actively firing
       %this.__firingFor = 0.0;        // Float: How the long player has been firing for
@@ -141,16 +142,17 @@ function Player::__updateAttrs(%this, %bypassCycle) {
     %ammoCount = "Infinite";
 
     if(%this.__alive) {
-      if(%weapon != "") {
+
+      if(%weapon) {
         %this.__ammoType = %weapon.imageType.ammoType;
+
+        if(%this.__ammoType) {
+          %ammoCount = Player::getItemCount(%this, %this.__ammoType);
+        }
       }
 
       else {
         %this.__ammoType = "";
-      }
-
-      if(%this.__ammoType != "") {
-        %ammoCount = Player::getItemCount(%this, %this.__ammoType);
       }
     }
 
@@ -362,6 +364,28 @@ function Player::__updateAttrs(%this, %bypassCycle) {
 
       else {
         %this.__hotFor = 0;
+      }
+    }
+  }
+
+  //- -------------------------------------------------------------- -//
+  //- Local scope: Update current crouching check (for target laser) -//
+  //- -------------------------------------------------------------- -//
+  {
+    %previousValue = %this.__crouching;
+    %this.__crouching = Player::isCrouching(%this);
+
+    if(%previousValue != %this.__crouching) {
+      if(%this.__crouching) {
+        if(isFunction(%this.__weapon @ "::onCrouch")) {
+          schedule(%this.__weapon @ "::onCrouch(" @ %this @ ");", 0);
+        }
+      }
+
+      else {
+        if(isFunction(%this.__weapon @ "::onUncrouch")) {
+          schedule(%this.__weapon @ "::onUncrouch(" @ %this @ ");", 0);
+        }
       }
     }
   }
