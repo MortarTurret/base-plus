@@ -218,7 +218,7 @@ function Player::__updateAttrs(%this, %bypassCycle) {
 
         %this.__lastTrigger = %time;
         %this.__triggeringFor = %diff + %this.__triggeringFor;
-        %this.__triggeringFor = GameBase::adjustFloatPrecision(%this.__triggeringFor, 2);
+        %this.__triggeringFor = toPrecision(%this.__triggeringFor, 2);
       }
 
       else {
@@ -240,7 +240,7 @@ function Player::__updateAttrs(%this, %bypassCycle) {
 
         %this.__lastFire = %time;
         %this.__firingFor = %diff + %this.__firingFor;
-        %this.__firingFor = GameBase::adjustFloatPrecision(%this.__firingFor, 2);
+        %this.__firingFor = toPrecision(%this.__firingFor, 2);
         %this.__weaponHeat = %this.__weaponHeat + 0.025 * sqrt(%this.__weaponHeat + 1);
       }
 
@@ -270,7 +270,7 @@ function Player::__updateAttrs(%this, %bypassCycle) {
 
         %this.__lastTarget = %time;
         %this.__targetingFor = %diff + %this.__targetingFor;
-        %this.__targetingFor = GameBase::adjustFloatPrecision(%this.__targetingFor, 2);
+        %this.__targetingFor = toPrecision(%this.__targetingFor, 2);
       }
 
       else {
@@ -298,7 +298,7 @@ function Player::__updateAttrs(%this, %bypassCycle) {
 
         %this.__lastJet = %time;
         %this.__jettingFor = %diff + %this.__jettingFor;
-        %this.__jettingFor = GameBase::adjustFloatPrecision(%this.__jettingFor, 2);
+        %this.__jettingFor = toPrecision(%this.__jettingFor, 2);
       }
 
       else {

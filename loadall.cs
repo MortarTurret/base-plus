@@ -1,3 +1,5 @@
+rundir( "server/util/" );
+  run("math");
 
 rundir( "server/" );
   run("command");

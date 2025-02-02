@@ -28,6 +28,7 @@ $InvList[PulseSensorPack] = 1;
 $InvList[DeployableSensorJammerPack] = 1;
 $InvList[CameraPack] = 1;
 $InvList[TurretPack] = 1;
+$InvList[HeavyTurretPack] = 1;
 $InvList[AmmoPack] = 1;
 $InvList[RepairKit] = 1;
 $InvList[DeployableInvPack] = 1;

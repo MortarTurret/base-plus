@@ -37,6 +37,7 @@
   $Armor[_default, pack, DeployableSensorJammerPack] = 1;
   $Armor[_default, pack, CameraPack] = 1;
   $Armor[_default, pack, TurretPack] = 1;
+  $Armor[_default, pack, HeavyTurretPack] = 0;
   $Armor[_default, pack, AmmoPack] = 1;
   $Armor[_default, pack, RepairKit] = 1;
   $Armor[_default, pack, DeployableInvPack] = 1;

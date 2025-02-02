@@ -46,6 +46,7 @@ $ItemMax[harmor, PulseSensorPack] = $Armor[_default, pack, PulseSensorPack];
 $ItemMax[harmor, DeployableSensorJammerPack] = $Armor[_default, pack, DeployableSensorJammerPack];
 $ItemMax[harmor, CameraPack] = $Armor[_default, pack, CameraPack];
 $ItemMax[harmor, TurretPack] = $Armor[_default, pack, TurretPack];
+$ItemMax[harmor, HeavyTurretPack] = $Armor[_default, pack, HeavyTurretPack] + 1;
 $ItemMax[harmor, AmmoPack] = $Armor[_default, pack, AmmoPack];
 $ItemMax[harmor, RepairKit] = $Armor[_default, pack, RepairKit];
 $ItemMax[harmor, DeployableInvPack] = $Armor[_default, pack, DeployableInvPack];
@@ -79,7 +80,7 @@ PlayerData harmor
   jetEnergyDrain = $Armor[_default, handling, drain] * 1.1;
 
   maxDamage = $Armor[_default, health] * 1.32; 
-  maxForwardSpeed = $Armor[_default, handling, forward] * 0.625;
+  maxForwardSpeed = $Armor[_default, handling, forward] * 0.8;
   maxBackwardSpeed = $Armor[_default, handling, backward] * 0.8;
   maxSideSpeed = $Armor[_default, handling, strafe] * 0.44;
   groundForce = $Armor[_default, handling, ground] * 0.9;

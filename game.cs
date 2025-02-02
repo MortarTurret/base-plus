@@ -1,5 +1,3 @@
-exec( "server/util/math" );
-
 exec( "server/game/mission" );
 exec( "server/game/player" );
 exec( "server/game/playerspawn" );
@@ -104,6 +102,20 @@ $TurretBoxMaxHeight = 25;    //Define Max Height of the area
 $TurretBoxMinLength = 10;	  //Define Min Length from another turret
 $TurretBoxMinWidth =  10;	  //Define Min Width from another turret
 $TurretBoxMinHeight = 10;    //Define Min Height from another turret
+
+//---------------------------------------------------------------------------------
+// HEAVY REMOTE TURRET
+//---------------------------------------------------------------------------------
+//- NOTE: These values are all based on the values for the standard 
+//- deployable turret.
+$MaxNumHeavyTurretsInBox = $MaxNumTurretsInBox / 1;     //Number of heavy remote turrets allowed in the area
+$HeavyTurretBoxMaxLength = $TurretBoxMaxLength * 1.5;    //Define Max Length of the area
+$HeavyTurretBoxMaxWidth =  $TurretBoxMaxWidth * 1.5;    //Define Max Width of the area
+$HeavyTurretBoxMaxHeight = $TurretBoxMaxHeight;    //Define Max Height of the area
+
+$HeavyTurretBoxMinLength = $TurretBoxMinLength * 1.5;	  //Define Min Length from another heavy turret
+$HeavyTurretBoxMinWidth =  $TurretBoxMinWidth * 1.5;	  //Define Min Width from another heavy turret
+$HeavyTurretBoxMinHeight = $TurretBoxMinHeight * 1.5;    //Define Min Height from another heavy turret
 
 //---------------------------------------------------------------------------------
 //	Object Types	

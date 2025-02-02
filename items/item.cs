@@ -19,6 +19,7 @@ $DefaultSlot=3;
 $TeamItemMax[DeployableAmmoPack] = 7;
 $TeamItemMax[DeployableInvPack] = 5;
 $TeamItemMax[TurretPack] = 10;
+$TeamItemMax[HeavyTurretPack] = ceil($TeamItemMax[TurretPack] / 3);
 $TeamItemMax[CameraPack] = 15;
 $TeamItemMax[DeployableSensorJammerPack] = 8;
 $TeamItemMax[PulseSensorPack] = 15;

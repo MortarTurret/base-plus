@@ -10,6 +10,7 @@ run("nextweapon");
 // turrets before weapons because elf/rocket define some datablocks/damagetypes weapons need
 rundir( "server/items/turrets/" );
 run("deployableturret");
+run("heavydeployableturret");
 run("elfturret");
 run("indoorturret");
 run("mortarturret");
@@ -63,6 +64,7 @@ run("commandpack");
 run("sensorjammerpack");
 run("shieldpack");
 run("turretpack");
+run("heavyturretpack");
 
 rundir( "server/items/sensors/" );
 run("sensor");

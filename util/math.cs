@@ -1,7 +1,25 @@
 //------------------------------------------------------------------------------
 //-  New methods for player math 
 //------------------------------------------------------------------------------
-function GameBase::adjustFloatPrecision(%floatValue, %precision) {
+function ceil(%floatValue) {
+  //- If the value is already an integer, just return it
+  if(%floatValue == floor(%floatValue)) {
+    return %floatValue;
+  }
+
+  //- Add 1 to the value to ensure the ceiling will round up
+  %adjustedValue = %floatValue + 1;
+
+  //- Apply floor to the adjusted value to get the ceiling
+  %adjustedValue = floor(%adjustedValue);
+
+  //- Return the ceiled value
+  return %adjustedValue;
+}
+
+error(ceil(3.14));
+
+function toPrecision(%floatValue, %precision) {
   // Default precision to 2 if not provided.
   %precision = %precision ? %precision : 2;
   %multiplier = 1;
@@ -22,10 +40,10 @@ function GameBase::adjustFloatPrecision(%floatValue, %precision) {
   
   //- If there's a decimal point in the string.
   if(%decimalPos != -1) {
-    // Get the current number of decimal places.
+    //- Get the current number of decimal places.
     %currentDecimals = String::len(%adjustedValue) - %decimalPos - 1;
     
-    // If the number of decimal places exceeds the desired precision, truncate.
+    //- If the number of decimal places exceeds the desired precision, truncate.
     if(%currentDecimals > %precision) {
       %adjustedValue = String::getSubStr(%adjustedValue, 0, %decimalPos + %precision + 1);
     }

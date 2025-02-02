@@ -46,6 +46,7 @@ $ItemMax[mfemale, PulseSensorPack] = $ItemMax[marmor, PulseSensorPack];
 $ItemMax[mfemale, DeployableSensorJammerPack] = $ItemMax[marmor, DeployableSensorJammerPack];
 $ItemMax[mfemale, CameraPack] = $ItemMax[marmor, CameraPack];
 $ItemMax[mfemale, TurretPack] = $ItemMax[marmor, TurretPack];
+$ItemMax[mfemale, HeavyTurretPack] = $ItemMax[marmor, HeavyTurretPack];
 $ItemMax[mfemale, AmmoPack] = $ItemMax[marmor, AmmoPack];
 $ItemMax[mfemale, RepairKit] = $ItemMax[marmor, RepairKit];
 $ItemMax[mfemale, DeployableInvPack] = $ItemMax[marmor, DeployableInvPack];

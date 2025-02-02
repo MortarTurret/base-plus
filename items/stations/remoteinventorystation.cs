@@ -28,6 +28,7 @@ $RemoteInvList[PulseSensorPack] = 1;
 $RemoteInvList[DeployableSensorJammerPack] = 1;
 $RemoteInvList[CameraPack] = 1;
 $RemoteInvList[TurretPack] = 1;
+$RemoteInvList[HeavyTurretPack] = 0;
 $RemoteInvList[AmmoPack] = 1;
 $RemoteInvList[RepairKit] = 1;
 
