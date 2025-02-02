@@ -26,7 +26,6 @@ $ItemMax[marmor, PlasmaGun] = $Armor[_default, weapon, PlasmaGun];
 $ItemMax[marmor, FlameThrower] = $Armor[_default, weapon, FlameThrower];
 $ItemMax[marmor, LaserRifle] = $Armor[_default, weapon, LaserRifle];
 $ItemMax[marmor, EnergyRifle] = $Armor[_default, weapon, EnergyRifle];
-$ItemMax[marmor, TargetingLaser] = $Armor[_default, weapon, TargetingLaser];
 $ItemMax[marmor, MineAmmo] = $Armor[_default, misc, MineAmmo] + 3;
 $ItemMax[marmor, Grenade] = $Armor[_default, misc, Grenade];
 $ItemMax[marmor, Beacon] = $Armor[_default, misc, Beacon] - 1;

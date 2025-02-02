@@ -25,7 +25,6 @@
   $Armor[_default, weapon, Mortar] = 0;
   $Armor[_default, weapon, PlasmaGun] = 1;
   $Armor[_default, weapon, FlameThrower] = 1;
-  $Armor[_default, weapon, TargetingLaser] = 1;
 
   //- Default pack availability
   $Armor[_default, pack, EnergyPack] = 1;

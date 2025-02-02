@@ -26,7 +26,6 @@ $ItemMax[harmor, PlasmaGun] = $Armor[_default, weapon, PlasmaGun];
 $ItemMax[harmor, FlameThrower] = $Armor[_default, weapon, FlameThrower];
 $ItemMax[harmor, LaserRifle] = $Armor[_default, weapon, LaserRifle];
 $ItemMax[harmor, EnergyRifle] = $Armor[_default, weapon, EnergyRifle];
-$ItemMax[harmor, TargetingLaser] = $Armor[_default, weapon, TargetingLaser];
 $ItemMax[harmor, MineAmmo] = $Armor[_default, misc, MineAmmo];
 $ItemMax[harmor, Grenade] = $Armor[_default, misc, Grenade] + 3;
 $ItemMax[harmor, Beacon] = $Armor[_default, misc, Beacon] - 1;
@@ -66,7 +65,7 @@ PlayerData harmor
   debrisId = playerDebris;
   shadowDetailMask = 1;
 
-  canCrouch = false;
+  canCrouch = true;
   jetSound = SoundJetHeavy;
   mapFilter = 1;
   mapIcon = "M_player";

@@ -26,7 +26,6 @@ $ItemMax[lfemale, PlasmaGun] = $ItemMax[larmor, PlasmaGun];
 $ItemMax[lfemale, FlameThrower] = $ItemMax[larmor, FlameThrower];
 $ItemMax[lfemale, LaserRifle] = $ItemMax[larmor, LaserRifle];
 $ItemMax[lfemale, EnergyRifle] = $ItemMax[larmor, EnergyRifle];
-$ItemMax[lfemale, TargetingLaser] = $ItemMax[larmor, TargetingLaser];
 $ItemMax[lfemale, MineAmmo] = $ItemMax[larmor, MineAmmo];
 $ItemMax[lfemale, Grenade] = $ItemMax[larmor, Grenade];
 $ItemMax[lfemale, Beacon] = $ItemMax[larmor, Beacon];

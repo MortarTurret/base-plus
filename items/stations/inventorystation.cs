@@ -8,7 +8,6 @@ $InvList[PlasmaGun] = 1;
 $InvList[FlameThrower] = 1;
 $InvList[LaserRifle] = 1;
 $InvList[EnergyRifle] = 1;
-$InvList[TargetingLaser] = 1;
 $InvList[MineAmmo] = 1;
 $InvList[Grenade] = 1;
 $InvList[Beacon] = 1;

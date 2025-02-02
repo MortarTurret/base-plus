@@ -8,7 +8,6 @@ $RemoteInvList[PlasmaGun] = 1;
 $RemoteInvList[FlameThrower] = 1;
 $RemoteInvList[LaserRifle] = 1;
 $RemoteInvList[EnergyRifle] = 1;
-$RemoteInvList[TargetingLaser] = 1;
 $RemoteInvList[MineAmmo] = 1;
 $RemoteInvList[Grenade] = 1;
 $RemoteInvList[Beacon] = 1;
