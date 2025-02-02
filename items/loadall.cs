@@ -59,6 +59,7 @@ run("energypack");
 run("motionsensorpack");
 run("pulsesensorpack");
 run("repairpack");
+run("commandpack");
 run("sensorjammerpack");
 run("shieldpack");
 run("turretpack");

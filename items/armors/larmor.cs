@@ -39,6 +39,7 @@ $ItemMax[larmor, MortarAmmo] = $Armor[_default, ammo, MortarAmmo];
 $ItemMax[larmor, EnergyPack] = $Armor[_default, pack, EnergyPack];
 $ItemMax[larmor, RepairPack] = $Armor[_default, pack, RepairPack];
 $ItemMax[larmor, ShieldPack] = $Armor[_default, pack, ShieldPack];
+$ItemMax[larmor, CommandPack] = $Armor[_default, pack, CommandPack] - 1;
 $ItemMax[larmor, SensorJammerPack] = $Armor[_default, pack, SensorJammerPack];
 $ItemMax[larmor, MotionSensorPack] = 0;
 $ItemMax[larmor, PulseSensorPack] = $Armor[_default, pack, PulseSensorPack];

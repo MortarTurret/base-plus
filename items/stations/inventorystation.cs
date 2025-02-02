@@ -21,6 +21,7 @@ $InvList[MortarAmmo] = 1;
 $InvList[EnergyPack] = 1;
 $InvList[RepairPack] = 1;
 $InvList[ShieldPack] = 1;
+$InvList[CommandPack] = 1;
 $InvList[SensorJammerPack] = 1;
 $InvList[MotionSensorPack] = 1;
 $InvList[PulseSensorPack] = 1;

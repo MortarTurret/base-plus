@@ -21,6 +21,7 @@ $RemoteInvList[MortarAmmo] = 1;
 $RemoteInvList[EnergyPack] = 1;
 $RemoteInvList[RepairPack] = 1;
 $RemoteInvList[ShieldPack] = 1;
+$RemoteInvList[CommandPack] = 1;
 $RemoteInvList[SensorJammerPack] = 1;
 $RemoteInvList[MotionSensorPack] = 1;
 $RemoteInvList[PulseSensorPack] = 1;

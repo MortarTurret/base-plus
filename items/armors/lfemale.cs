@@ -39,6 +39,7 @@ $ItemMax[lfemale, MortarAmmo] = $ItemMax[larmor, MortarAmmo];
 $ItemMax[lfemale, EnergyPack] = $ItemMax[larmor, EnergyPack];
 $ItemMax[lfemale, RepairPack] = $ItemMax[larmor, RepairPack];
 $ItemMax[lfemale, ShieldPack] = $ItemMax[larmor, ShieldPack];
+$ItemMax[lfemale, CommandPack] = $ItemMax[larmor, CommandPack];
 $ItemMax[lfemale, SensorJammerPack] = $ItemMax[larmor, SensorJammerPack];
 $ItemMax[lfemale, MotionSensorPack] = $ItemMax[larmor, MotionSensorPack];
 $ItemMax[lfemale, PulseSensorPack] = $ItemMax[larmor, PulseSensorPack];

@@ -30,6 +30,7 @@
   $Armor[_default, pack, EnergyPack] = 1;
   $Armor[_default, pack, RepairPack] = 1;
   $Armor[_default, pack, ShieldPack] = 1;
+  $Armor[_default, pack, CommandPack] = 1;
   $Armor[_default, pack, SensorJammerPack] = 1;
   $Armor[_default, pack, MotionSensorPack] = 1;
   $Armor[_default, pack, PulseSensorPack] = 1;
