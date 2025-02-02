@@ -38,46 +38,58 @@ function remoteCStatus(%clientId, %status, %message)
 
 
 function Client::takeControl(%clientId, %objectId) {
-   // remote control
-   if(%objectId == -1)
-   {
-      //echo("objectId = " @ %objectId);
-      return;
-   }
+  // remote control
+  if(%objectId == -1) return;
 
-	%pl = Client::getOwnedObject(%clientId);
+	%player = Client::getOwnedObject(%clientId);
+  %playerName = Client::getName(%clientId);
+
 	// If mounted to a vehicle then can't mount any other objects
-	if(%pl.driver != "" || %pl.vehicleSlot != "")
-		return;
+	if(%player.driver != "" || %player.vehicleSlot != "") return;
 
-   if(GameBase::getTeam(%objectId) != Client::getTeam(%clientId))
-   {
-      //echo(GameBase::getTeam(%objectId) @ " " @ Client::getTeam(%clientId));
-      return;
-   }
-   if(GameBase::getControlClient(%objectId) != -1)
-   {
+  if(GameBase::getTeam(%objectId) != Client::getTeam(%clientId)) {
+    //echo(GameBase::getTeam(%objectId) @ " " @ Client::getTeam(%clientId));
+
+   return;
+  }
+
+   if(GameBase::getControlClient(%objectId) != -1) {
       echo("Ctrl Client = " @ GameBase::getControlClient(%objectId));
+
       return;
    }
+
 	%name = GameBase::getDataName(%objectId);
-	if(%name != CameraTurret && %name != DeployableTurret)
-   {
-	   if(!GameBase::isPowered(%objectId)) 
+
+	if(%name != CameraTurret && %name != DeployableTurret && %name != HeavyDeployableTurret)
+  {
+    if(%objectId.__hotwired) 
 		{
-	      // echo("Turret " @ %objectId @ " not powered.");
-	      return;
+      Client::SendMessage(%clientId, 0, "Command Link Failed: Turret " @ %objectId @ " operating under low power.");
+
+      return;
 		}
-   }
-   if(!(Client::getOwnedObject(%clientId)).CommandTag && GameBase::getDataName(%objectId) != CameraTurret &&
-      !$TestCheats) {
-		Client::SendMessage(%clientId,0,"Must be at a Command Station to control turrets");
-   		return;
-   }
-   if(GameBase::getDamageState(%objectId) == "Enabled") {
-   	Client::setControlObject(%clientId, %objectId);
-   	Client::setGuiMode(%clientId, $GuiModePlay);
-	}
+
+    else if(!GameBase::isPowered(%objectId)) 
+		{
+      Client::SendMessage(%clientId, 0, "Command Link Failed: Turret " @ %objectId @ " is offline.");
+
+      return;
+		}
+  }
+  
+  if(!CommandPack::IsAvailable(%player)) {
+    if(!(Client::getOwnedObject(%clientId)).CommandTag && GameBase::getDataName(%objectId) != CameraTurret && !$TestCheats) {
+      Client::SendMessage(%clientId,0, "Command Link Failed: Operator \"" @ %playerName @ "::" @ %clientId @ "\" unauthorized.");
+
+      return;
+    }
+  }
+
+  if(GameBase::getDamageState(%objectId) == "Enabled") {
+    Client::setControlObject(%clientId, %objectId);
+    Client::setGuiMode(%clientId, $GuiModePlay);
+  }
 }
 
 function remoteCmdrMountObject(%clientId, %objectIdx) {
