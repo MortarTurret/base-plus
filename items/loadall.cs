@@ -29,7 +29,6 @@ run("mortar");
 run("plasmagun");
 run("flamethrower");
 run("repairgun");
-run("targetinglaser");
 
 // mine damage type
 rundir( "server/items/misc/" );
