@@ -16,10 +16,10 @@ LaserData sniperLaser
   beamTime          = 0.5;
   damageConversion  = 0.007;
   detachFromShooter = true;
-  hitName           = "enbolt.dts";
+  hitName           = "enex.dts";
   hitSoundId        = SoundLaserHit;
   laserBitmapName   = "lightningNew.png";
-  lightColor        = { 1.0, 0.25, 0.25 };
+  lightColor        = { 0.25, 0.50, 1.25 };
   lightRange        = 2.0;
 };
 

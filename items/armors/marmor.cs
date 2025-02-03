@@ -22,6 +22,7 @@ $ItemMax[marmor, Chaingun] = $Armor[_default, weapon, Chaingun];
 $ItemMax[marmor, Disclauncher] = $Armor[_default, weapon, Disclauncher];
 $ItemMax[marmor, GrenadeLauncher] = $Armor[_default, weapon, GrenadeLauncher];
 $ItemMax[marmor, Mortar] = $Armor[_default, weapon, Mortar];
+$ItemMax[marmor, RocketLauncher] = $Armor[_default, weapon, RocketLauncher];
 $ItemMax[marmor, PlasmaGun] = $Armor[_default, weapon, PlasmaGun];
 $ItemMax[marmor, FlameThrower] = $Armor[_default, weapon, FlameThrower];
 $ItemMax[marmor, LaserRifle] = $Armor[_default, weapon, LaserRifle];
@@ -51,6 +52,8 @@ $ItemMax[marmor, AmmoPack] = $Armor[_default, pack, AmmoPack];
 $ItemMax[marmor, RepairKit] = $Armor[_default, pack, RepairKit];
 $ItemMax[marmor, DeployableInvPack] = $Armor[_default, pack, DeployableInvPack];
 $ItemMax[marmor, DeployableAmmoPack] = $Armor[_default, pack, DeployableAmmoPack];
+$ItemMax[marmor, DeployableGenPack] = $Armor[_default, pack, DeployableGenPack] - 1;
+$ItemMax[marmor, DeployableEchoPack] = $Armor[_default, pack, DeployableEchoPack] - 1;
 
 $MaxWeapons[marmor] = $Armor[_default, weapon, All];
 

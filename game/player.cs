@@ -41,7 +41,7 @@ function Player::onAdd(%this) {
       %this.__alive = false;          // Boolean: True if the player is currently alive
       %this.__ammo = 0;               // Integer: Player's current ammo for equipped weapon
       %this.__ammoType = "";          // String: Type of ammo used by Player's equipped weapon
-      %this.__armor = "Light";        // String: Player's equipped armor
+      %this.__armor = "Spawn";        // String: Player's equipped armor
       %this.__crouched = false;       // Boolean: True if the player is crouching
       %this.__energy = 0;             // Integer: Player's current energy percentage
       %this.__firing = false;         // Boolean: True if the Player is actively firing
@@ -544,8 +544,6 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 
           GameBase::setDamageLevel(%this, %damageLevel);
         }
-
-        error(%this.__heat);
       } 
     }
 

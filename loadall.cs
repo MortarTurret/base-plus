@@ -1,5 +1,7 @@
-rundir( "server/util/" );
-  run("math");
+rundir( "server/math/" );
+  run("ceil");
+  run("getRangedRandom");
+  run("toPrecision");
 
 rundir( "server/" );
   run("command");

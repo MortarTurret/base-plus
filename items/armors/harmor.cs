@@ -21,7 +21,8 @@ $ItemMax[harmor, Blaster] = $Armor[_default, weapon, Blaster];
 $ItemMax[harmor, Chaingun] = $Armor[_default, weapon, Chaingun];
 $ItemMax[harmor, Disclauncher] = $Armor[_default, weapon, Disclauncher];
 $ItemMax[harmor, GrenadeLauncher] = $Armor[_default, weapon, GrenadeLauncher];
-$ItemMax[harmor, Mortar] = $Armor[_default, weapon, LaserRifle] + 1;
+$ItemMax[harmor, Mortar] = $Armor[_default, weapon, Mortar] + 1;
+$ItemMax[harmor, RocketLauncher] = $Armor[_default, weapon, RocketLauncher] + 1;
 $ItemMax[harmor, PlasmaGun] = $Armor[_default, weapon, PlasmaGun];
 $ItemMax[harmor, FlameThrower] = $Armor[_default, weapon, FlameThrower];
 $ItemMax[harmor, LaserRifle] = $Armor[_default, weapon, LaserRifle];
@@ -51,6 +52,8 @@ $ItemMax[harmor, AmmoPack] = $Armor[_default, pack, AmmoPack];
 $ItemMax[harmor, RepairKit] = $Armor[_default, pack, RepairKit];
 $ItemMax[harmor, DeployableInvPack] = $Armor[_default, pack, DeployableInvPack];
 $ItemMax[harmor, DeployableAmmoPack] = $Armor[_default, pack, DeployableAmmoPack];
+$ItemMax[harmor, DeployableGenPack] = $Armor[_default, pack, DeployableGenPack];
+$ItemMax[harmor, DeployableEchoPack] = $Armor[_default, pack, DeployableEchoPack];
 
 $MaxWeapons[harmor] = $Armor[_default, weapon, All] + 1;
 

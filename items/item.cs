@@ -18,6 +18,8 @@ $DefaultSlot=3;
 // Limit on number of special Items you can buy
 $TeamItemMax[DeployableAmmoPack] = 7;
 $TeamItemMax[DeployableInvPack] = 5;
+$TeamItemMax[DeployableEchoPack] = 1;
+$TeamItemMax[DeployableGenPack] = 1;
 $TeamItemMax[TurretPack] = 10;
 $TeamItemMax[HeavyTurretPack] = ceil($TeamItemMax[TurretPack] / 3);
 $TeamItemMax[CameraPack] = 15;

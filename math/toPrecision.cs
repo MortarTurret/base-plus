@@ -1,24 +1,6 @@
 //------------------------------------------------------------------------------
-//-  New methods for player math 
+//-  Change a float to an arbitrary level of precision 
 //------------------------------------------------------------------------------
-function ceil(%floatValue) {
-  //- If the value is already an integer, just return it
-  if(%floatValue == floor(%floatValue)) {
-    return %floatValue;
-  }
-
-  //- Add 1 to the value to ensure the ceiling will round up
-  %adjustedValue = %floatValue + 1;
-
-  //- Apply floor to the adjusted value to get the ceiling
-  %adjustedValue = floor(%adjustedValue);
-
-  //- Return the ceiled value
-  return %adjustedValue;
-}
-
-error(ceil(3.14));
-
 function toPrecision(%floatValue, %precision) {
   // Default precision to 2 if not provided.
   %precision = %precision ? %precision : 2;
@@ -70,4 +52,4 @@ function toPrecision(%floatValue, %precision) {
 
   //- Return our new precision-adjusted value! #VGY
   return %adjustedValue;
-} 
+}

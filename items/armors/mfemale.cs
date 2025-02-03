@@ -22,6 +22,7 @@ $ItemMax[mfemale, Chaingun] = $ItemMax[marmor, Chaingun];
 $ItemMax[mfemale, Disclauncher] = $ItemMax[marmor, Disclauncher];
 $ItemMax[mfemale, GrenadeLauncher] = $ItemMax[marmor, GrenadeLauncher];
 $ItemMax[mfemale, Mortar] = $ItemMax[marmor, Mortar];
+$ItemMax[mfemale, RocketLauncher] = $ItemMax[marmor, RocketLauncher];
 $ItemMax[mfemale, PlasmaGun] = $ItemMax[marmor, PlasmaGun];
 $ItemMax[mfemale, FlameThrower] = $ItemMax[marmor, FlameThrower];
 $ItemMax[mfemale, LaserRifle] = $ItemMax[marmor, LaserRifle];
@@ -51,6 +52,8 @@ $ItemMax[mfemale, AmmoPack] = $ItemMax[marmor, AmmoPack];
 $ItemMax[mfemale, RepairKit] = $ItemMax[marmor, RepairKit];
 $ItemMax[mfemale, DeployableInvPack] = $ItemMax[marmor, DeployableInvPack];
 $ItemMax[mfemale, DeployableAmmoPack] = $ItemMax[marmor, DeployableAmmoPack];
+$ItemMax[mfemale, DeployableGenPack] = $ItemMax[marmor, DeployableGenPack];
+$ItemMax[mfemale, DeployableEchoPack] = $ItemMax[marmor, DeployableEchoPack];
 
 $MaxWeapons[mfemale] = $MaxWeapons[marmor];
 

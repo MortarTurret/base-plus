@@ -23,6 +23,7 @@
   $Armor[_default, weapon, GrenadeLauncher] = 1;
   $Armor[_default, weapon, LaserRifle] = 0;
   $Armor[_default, weapon, Mortar] = 0;
+  $Armor[_default, weapon, RocketLauncher] = 0;
   $Armor[_default, weapon, PlasmaGun] = 1;
   $Armor[_default, weapon, FlameThrower] = 1;
 
@@ -42,6 +43,8 @@
   $Armor[_default, pack, RepairKit] = 1;
   $Armor[_default, pack, DeployableInvPack] = 1;
   $Armor[_default, pack, DeployableAmmoPack] = 1;
+  $Armor[_default, pack, DeployableEchoPack] = 1;
+  $Armor[_default, pack, DeployableGenPack] = 1;
 
   //- Default max ammo pools
   $Armor[_default, ammo, BulletAmmo] = 150;
