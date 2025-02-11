@@ -52,14 +52,13 @@ SeekingMissileData TurretMissile
    soundId = SoundJetHeavy;
 };
 
-
 TurretData RocketTurret
 {
 	maxDamage = 0.75;
 	maxEnergy = 100;
 	minGunEnergy = 60;
 	maxGunEnergy = 60;
-	range = 150;
+	range = getVisibleRange(150);
 	gunRange = 300;
 	visibleToSensor = true;
 	dopplerVelocity = 0;
@@ -88,9 +87,16 @@ TurretData RocketTurret
 
 function SeekingMissile::updateTargetPercentage(%target)
 {
-   return GameBase::virtual(%target, "getHeatFactor");
-}
+  %type = getObjectType(%target);
 
+  if(%type == "Player") {
+    return %target.__heat;
+  }
+
+  else {
+    return GameBase::virtual(%target, "getHeatFactor");
+  }
+}
 
 function RocketTurret::onPower(%this,%power,%generator)
 {
@@ -108,8 +114,13 @@ function RocketTurret::onPower(%this,%power,%generator)
 
 function RocketTurret::verifyTarget(%this,%target)
 {
-   if (GameBase::virtual(%target, "getHeatFactor") >= 0.5)
-      return "True";
-   else
-      return "False";
+  %type = getObjectType(%target);
+
+  if(%type == "Player") {
+    return (%target.__hot) ? "True" : "False";
+  }
+
+  else {
+    return (GameBase::virtual(%target, "getHeatFactor") >= 0.5) ? "True" : "False";
+  }
 }

@@ -205,11 +205,7 @@ function Player::__updateAttrs(%this, %bypassCycle) {
     //- here than it is to try and shoehorn it somewhere else in the loop
     if(%previousValue != %this.__triggering) {
       if(%this.__triggering) {
-        error("triggering");
-
         if(isFunction(%this.__weapon @ "::onSynActivate")) {
-          error("schedule syn activate");
-
           schedule(%this.__weapon @ "::onSynActivate(" @ %this @ ");", 0);
         }
       }
@@ -351,11 +347,11 @@ function Player::__updateAttrs(%this, %bypassCycle) {
 
       %heatFactor = %this.__heat;
 
-      %heatRate = (%this.__armor == "Light") ? 0.1 : 
-                  (%this.__armor == "Heavy") ? 0.05 : 0.08;
+      %heatRate = (%this.__armor == "Light") ? 0.10 : 
+                  (%this.__armor == "Heavy") ? 0.06 : 0.08;
 
-      %coolRate = (%this.__armor == "Light") ? 0.08 : 
-                  (%this.__armor == "Heavy") ? 0.05 : 0.06;
+      %coolRate = (%this.__armor == "Light") ? 0.030 : 
+                  (%this.__armor == "Heavy") ? 0.015 : 0.022;
 
       %heatFactor = (%this.__jetting) ? %heatFactor + %heatRate : %heatFactor - %coolRate;
       %heatFactor = clamp(0, %heatFactor, 1);
@@ -368,8 +364,8 @@ function Player::__updateAttrs(%this, %bypassCycle) {
     {
       //- Armor weight directly relates to heat retention; heavy armor triggers 
       //- turret and plasma heat checks earlier.
-      %heatIndex = (%this.__armor == "Light") ? 0.80 : 
-                  (%this.__armor == "Heavy") ? 0.55 : 0.067;
+      %heatIndex = (%this.__armor == "Light") ? 0.6 : 
+                  (%this.__armor == "Heavy") ? 0.4 : 0.5;
 
       %this.__hot = (%this.__heat > %heatIndex) ? true : false;
 
@@ -414,10 +410,19 @@ function Player::__updateAttrs(%this, %bypassCycle) {
     }
   }
 
+  //- ------------------------ -//
+  //- Method scope: Debugging. -//
+  //- ------------------------ -//
+  {
+    %client = Player::getClient(%this);
+
+    message::topPrint( %client, "Heat: " @ %this.__heat @ "   " @ "Hot: " @ %this.__hot );
+  }
+
   //- ----------------------------------------- -//
   //- Method scope: Call method n times/second. -//
   //- ----------------------------------------- -//
-  schedule("Player::__updateAttrs(" @ %this @ ");", 0.05);
+  schedule("Player::__updateAttrs(" @ %this @ ");", 0.1);
 }
 //----------------------------------------------------------------------------//
 //----------------------------------------------------------------------------//
@@ -486,8 +491,8 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 	if ( !Player::isExposed(%this) )
 		return;
 
-  error(%vertPos);
-  error(%quadrant);
+  // error(%vertPos);
+  // error(%quadrant);
 
 	%damagedClient = Player::getClient(%this);
 	%shooterClient = %object;

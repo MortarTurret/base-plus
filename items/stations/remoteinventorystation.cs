@@ -4,6 +4,7 @@ $RemoteInvList[Chaingun] = 1;
 $RemoteInvList[Disclauncher] = 1;
 $RemoteInvList[GrenadeLauncher] = 1;
 $RemoteInvList[Mortar] = 1;
+$RemoteInvList[RocketLauncher] = 1;
 $RemoteInvList[PlasmaGun] = 1;
 $RemoteInvList[FlameThrower] = 1;
 $RemoteInvList[LaserRifle] = 1;

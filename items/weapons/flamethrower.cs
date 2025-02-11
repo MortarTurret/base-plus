@@ -31,7 +31,6 @@ GrenadeData FlameThrowerProjectile
 
 ItemImageData FlameThrowerImage
 {
-  // accuFire = false;
 	accuFire = true;
   ammoType = PlasmaAmmo;
   fireTime = 0.1;

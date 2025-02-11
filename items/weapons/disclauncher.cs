@@ -171,7 +171,7 @@ ItemImageData DiscLauncherImage {
 
 ItemImageData LightDiscLauncherImage {
   accuFire = true;
-  ammoType = DiscAmmo;
+  ammoType = DiscLauncherImage.ammoType;
   fireTime = 1.25;
   mountPoint = 0;
   projectileType = DiscShell;
@@ -186,13 +186,12 @@ ItemImageData LightDiscLauncherImage {
 
 ItemImageData HeavyDiscLauncherLeftImage {
   accuFire = false;
-  ammoType = LightDiscLauncherImage.ammoType;
+  ammoType = DiscLauncherImage.ammoType;
   fireTime = LightDiscLauncherImage.fireTime * 1.1;
   mountPoint = LightDiscLauncherImage.mountPoint;
   mountRotation = { 0, 1.21, 0 };
   projectileType = HeavyDiscShellLeft;
   reloadTime = LightDiscLauncherImage.reloadTime * 1.1;
-  sfxActivate = SoundPickUpWeapon;
   sfxFire = LightDiscLauncherImage.sfxFire;
   sfxReady = LightDiscLauncherImage.sfxReady;
   sfxReload = LightDiscLauncherImage.sfxReload;
@@ -202,8 +201,8 @@ ItemImageData HeavyDiscLauncherLeftImage {
 };
 
 ItemImageData HeavyDiscLauncherRightImage {
-  accuFire = false;
-  ammoType = HeavyDiscLauncherLeftImage.ammoType;
+  accuFire =false;
+  ammoType = DiscLauncherImage.ammoType;
   fireTime = HeavyDiscLauncherLeftImage.fireTime;
   mountPoint = HeavyDiscLauncherLeftImage.mountPoint;
   mountRotation = { 0, -1.21, 0 };
@@ -278,39 +277,34 @@ ItemData HeavyDiscLauncherRight
 //--------------------------------------------------------------------------- //
 //- Callback event methods                                                    //
 //--------------------------------------------------------------------------- //
-  //- Disc Launcher
-  function DiscLauncher::onUse(%player, %slot) {
-    Player::mountItem(%player, DiscLauncher, $WeaponSlot);
+function DiscLauncher::onUse(%player, %slot) {
+  Player::mountItem(%player, DiscLauncher, $WeaponSlot);
 
-    if(%player.__armor == "Heavy") {
-      Player::mountItem(%player, HeavyDiscLauncherLeft, 4);
-      Player::mountItem(%player, HeavyDiscLauncherRight, 6);
-    }
-
-    else {
-      Player::mountItem(%player, LightDiscLauncher, 4);
-    }
+  if(%player.__armor == "Heavy") {
+    Player::mountItem(%player, HeavyDiscLauncherLeft, 4);
+    Player::mountItem(%player, HeavyDiscLauncherRight, 6);
   }
 
-  function DiscLauncher::onSynActivate(%player) {
-    error("Activate");
-
-    Player::trigger(%player, 4, true);
-    Player::trigger(%player, 6, true);
+  else {
+    Player::mountItem(%player, LightDiscLauncher, 4);
   }
+}
 
-  function DiscLauncher::onSynDectivate(%player) {
-    error("Dectivate");
+function DiscLauncher::onSynActivate(%player) {
+  Player::trigger(%player, 4, true);
+  Player::trigger(%player, 6, true);
+}
 
-    Player::trigger(%player, 4, false);
-    Player::trigger(%player, 6, false);
-  }
+function DiscLauncher::onSynDectivate(%player) {
+  Player::trigger(%player, 4, false);
+  Player::trigger(%player, 6, false);
+}
 
-  function DiscLauncher::onUnmount(%player, %slot) {
-    Player::trigger(%player, 4, false);
-    Player::trigger(%player, 6, false);
+function DiscLauncher::onUnmount(%player, %slot) {
+  Player::trigger(%player, 4, false);
+  Player::trigger(%player, 6, false);
 
-    Player::unmountItem(%player, $WeaponSlot);
-    Player::unmountItem(%player, 4);
-    Player::unmountItem(%player, 6);
-  } 
+  Player::unmountItem(%player, $WeaponSlot);
+  Player::unmountItem(%player, 4);
+  Player::unmountItem(%player, 6);
+} 

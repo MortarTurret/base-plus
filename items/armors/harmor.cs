@@ -83,15 +83,15 @@ PlayerData harmor
   jetEnergyDrain = $Armor[_default, handling, drain] * 1.1;
 
   maxDamage = $Armor[_default, health] * 1.32; 
-  maxForwardSpeed = $Armor[_default, handling, forward] * 0.8;
-  maxBackwardSpeed = $Armor[_default, handling, backward] * 0.8;
-  maxSideSpeed = $Armor[_default, handling, strafe] * 0.44;
+  maxForwardSpeed = $Armor[_default, handling, forward] * 0.925;
+  maxBackwardSpeed = $Armor[_default, handling, backward] * 0.925;
+  maxSideSpeed = $Armor[_default, handling, strafe] * 0.75;
   groundForce = $Armor[_default, handling, ground] * 0.9;
   groundTraction = $Armor[_default, handling, traction] * 1.5;
   mass = $Armor[_default, handling, mass] * 1.385;
   maxEnergy = $Armor[_default, energy, max] * 1.375;
   drag = $Armor[_default, handling, drag];
-  density = $Armor[_default, handling, density] * 1.67;
+  density = $Armor[_default, handling, density] * 1.35;
 
   minDamageSpeed = $Armor[_default, damageRatio, speed] * 1.0; 
   damageScale = $Armor[_default, damageRatio, scale] * 1.2;

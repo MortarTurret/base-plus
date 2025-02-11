@@ -1,4 +1,8 @@
 // do stuff that defines datablocks we need for items
+rundir( "server/special/" );
+run("getVisibleRange");
+
+// do stuff that defines datablocks we need for items
 rundir( "server/items/" );
 run("damagetypes");
 run("shockwave");
@@ -27,6 +31,7 @@ run("elf");
 run("grenadelauncher");
 run("laserrifle");
 run("mortar");
+run("rocketlauncher");
 run("plasmagun");
 run("flamethrower");
 run("repairgun");
