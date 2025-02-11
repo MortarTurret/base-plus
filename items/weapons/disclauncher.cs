@@ -102,19 +102,19 @@ BulletData HeavyDiscShellLeft {
   acceleration      = DiscShell.acceleration;
   aimDeflection     = 0.0075;
   bulletShapeName   = DiscShell.bulletShapeName;
-  collisionRadius   = DiscShell.collisionRadius;
+  collisionRadius   = 0.2;
   damageClass       = DiscShell.damageClass;
   damageType        = DiscShell.damageType;
   damageValue       = DiscShell.damageValue / 2 * 1.25;
-  explosionRadius   = DiscShell.explosionRadius;
+  explosionRadius   = DiscShell.explosionRadius * 1.25;
   explosionTag      = heavyDiscExp0;
   expRandCycle       = 3.0;
-  inheritedVelocityScale = DiscShell.inheritedVelocityScale;
+  inheritedVelocityScale = DiscShell.inheritedVelocityScale * 1.25;
   isVisible          = true;
-  kickBackStrength  = DiscShell.kickBackStrength;
+  kickBackStrength  = DiscShell.kickBackStrength * 1.5;
   lightColor        = DiscShell.lightColor;
-  lightRange        = DiscShell.lightRange;
-  liveTime          = DiscShell.liveTime;
+  lightRange        = DiscShell.lightRange * 1.5;
+  liveTime          = DiscShell.liveTime * 1.25;
   mass              = DiscShell.mass;
   muzzleVelocity    = DiscShell.muzzleVelocity * 0.8;
   rotationPeriod    = 1.75;
@@ -156,13 +156,25 @@ BulletData HeavyDiscShellRight {
 //- Image defs                                                                //
 //--------------------------------------------------------------------------- //
 ItemImageData DiscLauncherImage {
+  accuFire = false;
+  ammoType = DiscAmmo;
+  fireTime = 0;
+  mountOffset = { 0, 0.08, -0.1 };
+  mountPoint = 0;
+  reloadTime = 0;
+  sfxActivate = SoundPickUpWeapon;
+  shapeFile = "paintgun";
+  spinUpTime = 0;
+  weaponType = 3;
+};
+
+ItemImageData LightDiscLauncherImage {
   accuFire = true;
   ammoType = DiscAmmo;
   fireTime = 1.25;
   mountPoint = 0;
   projectileType = DiscShell;
   reloadTime = 0.25;
-  sfxActivate = SoundPickUpWeapon;
   sfxFire = SoundFireDisc;
   sfxReady = SoundDiscSpin;
   sfxReload = SoundDiscReload;
@@ -171,50 +183,37 @@ ItemImageData DiscLauncherImage {
   weaponType = 3;
 };
 
-ItemImageData HeavyDiscLauncherImage {
-  accuFire = false;
-  fireTime = 0;
-  mountOffset = { 0, 0, -0.15 };
-  mountPoint = DiscLauncherImage.mountPoint;
-  mountRotation = { 0, 0, 0 };
-  reloadTime = 0;
-  shapeFile = "paintgun";
-  spinUpTime = 0;
-  weaponType = DiscLauncherImage.weaponType;
-};
-
 ItemImageData HeavyDiscLauncherLeftImage {
   accuFire = false;
-  ammoType = DiscLauncherImage.ammoType;
-  fireTime = DiscLauncherImage.fireTime;
-  mountPoint = DiscLauncherImage.mountPoint;
+  ammoType = LightDiscLauncherImage.ammoType;
+  fireTime = LightDiscLauncherImage.fireTime;
+  mountPoint = LightDiscLauncherImage.mountPoint;
   mountRotation = { 0, 1.21, 0 };
   projectileType = HeavyDiscShellLeft;
-  reloadTime = DiscLauncherImage.reloadTime;
+  reloadTime = LightDiscLauncherImage.reloadTime;
   sfxActivate = SoundPickUpWeapon;
-  sfxFire = DiscLauncherImage.sfxFire;
-  sfxReady = DiscLauncherImage.sfxReady;
-  sfxReload = DiscLauncherImage.sfxReload;
-  shapeFile = DiscLauncherImage.shapeFile;
-  spinUpTime = DiscLauncherImage.spinUpTime;
-  weaponType = DiscLauncherImage.weaponType;
+  sfxFire = LightDiscLauncherImage.sfxFire;
+  sfxReady = LightDiscLauncherImage.sfxReady;
+  sfxReload = LightDiscLauncherImage.sfxReload;
+  shapeFile = LightDiscLauncherImage.shapeFile;
+  spinUpTime = LightDiscLauncherImage.spinUpTime;
+  weaponType = LightDiscLauncherImage.weaponType;
 };
 
 ItemImageData HeavyDiscLauncherRightImage {
   accuFire = false;
-  ammoType = DiscLauncherImage.ammoType;
-  fireTime = DiscLauncherImage.fireTime;
-  mountPoint = DiscLauncherImage.mountPoint;
+  ammoType = LightDiscLauncherImage.ammoType;
+  fireTime = LightDiscLauncherImage.fireTime;
+  mountPoint = LightDiscLauncherImage.mountPoint;
   mountRotation = { 0, -1.21, 0 };
   projectileType = HeavyDiscShellRight;
-  reloadTime = DiscLauncherImage.reloadTime;
-  sfxFire = DiscLauncherImage.sfxFire;
-  // sfxReady = DiscLauncherImage.sfxReady;
+  reloadTime = LightDiscLauncherImage.reloadTime;
+  sfxFire = LightDiscLauncherImage.sfxFire;
   sfxReady = SoundMortarIdle;
-  sfxReload = DiscLauncherImage.sfxReload;
-  shapeFile = DiscLauncherImage.shapeFile;
-  spinUpTime = DiscLauncherImage.spinUpTime;
-  weaponType = DiscLauncherImage.weaponType;
+  sfxReload = LightDiscLauncherImage.sfxReload;
+  shapeFile = LightDiscLauncherImage.shapeFile;
+  spinUpTime = LightDiscLauncherImage.spinUpTime;
+  weaponType = LightDiscLauncherImage.weaponType;
 };
 
 //--------------------------------------------------------------------------- //
@@ -233,44 +232,45 @@ ItemData DiscLauncher
   showWeaponBar = true;
 };
 
-ItemData HeavyDiscLauncher
-{
-  className = "Weapon";
-  description = "Heavy Disc Launcher";
-  heading = "bWeapons";
-  hudIcon = "disk";
-  imageType = HeavyDiscLauncherImage;
-  price = 150;
-  shadowDetailMask = 4;
-  shapeFile = "disc";
-  showInventory = false;
-  showWeaponBar = true;
-};
 
-ItemData HeavyDiscLauncherLeftExtra
+ItemData LightDiscLauncher
 {
-  className = "Weapon";
-  description = "Heavy Disc Launcher";
-  heading = "bWeapons";
-  hudIcon = "disk";
-  imageType = HeavyDiscLauncherLeftImage;
+  className = DiscLauncher.className;
+  description = "Light " @ DiscLauncher.description;
+  heading = DiscLauncher.heading;
+  hudIcon = DiscLauncher.hudIcon;
+  imageType = LightDiscLauncherImage;
   price = 0;
-  shadowDetailMask = 4;
-  shapeFile = "force";
+  shadowDetailMask = DiscLauncher.shadowDetailMask;
+  shapeFile = DiscLauncher.shapeFile;
   showInventory = false;
   showWeaponBar = false;
 };
 
-ItemData HeavyDiscLauncherRightExtra
+ItemData HeavyDiscLauncherLeft
 {
-  className = "Weapon";
-  description = "Heavy Disc Launcher";
-  heading = "bWeapons";
-  hudIcon = "disk";
+  className = DiscLauncher.className;
+  description = "Heavy " @ DiscLauncher.description;
+  heading = DiscLauncher.heading;
+  hudIcon = DiscLauncher.hudIcon;
+  imageType = HeavyDiscLauncherLeftImage;
+  price = 0;
+  shadowDetailMask = DiscLauncher.shadowDetailMask;
+  shapeFile = DiscLauncher.shapeFile;
+  showInventory = false;
+  showWeaponBar = false;
+};
+
+ItemData HeavyDiscLauncherRight
+{
+  className = DiscLauncher.className;
+  description = "Heavy " @ DiscLauncher.description;
+  heading = DiscLauncher.heading;
+  hudIcon = DiscLauncher.hudIcon;
   imageType = HeavyDiscLauncherRightImage;
   price = 0;
-  shadowDetailMask = 4;
-  shapeFile = "force";
+  shadowDetailMask = DiscLauncher.shadowDetailMask;
+  shapeFile = DiscLauncher.shapeFile;
   showInventory = false;
   showWeaponBar = false;
 };
@@ -280,57 +280,37 @@ ItemData HeavyDiscLauncherRightExtra
 //--------------------------------------------------------------------------- //
   //- Disc Launcher
   function DiscLauncher::onUse(%player, %slot) {
-    Player::mountItem(%player, (%player.__armor == "Heavy") ? HeavyDiscLauncher : DiscLauncher, $WeaponSlot);
-  }
+    Player::mountItem(%player, DiscLauncher, $WeaponSlot);
 
-  function DiscLauncher::onUnmount(%player, %slot) {
-    Player::unmountItem(%player, 4);
-    Player::unmountItem(%player, 6);
-  }
+    if(%player.__armor == "Heavy") {
+      Player::mountItem(%player, HeavyDiscLauncherLeft, 4);
+      Player::mountItem(%player, HeavyDiscLauncherRight, 6);
+    }
 
-  function DiscLauncher::onDrop(%player, %item) {
-    %state = Player::getItemState(%player, $WeaponSlot);
-    
-    if(%state != "Fire" && %state != "Reload") {
-      Player::unmountItem(%player, 4);
-      Player::unmountItem(%player, 6);
-
-      Item::onDrop(%player, %item);
+    else {
+      Player::mountItem(%player, LightDiscLauncher, 4);
     }
   }
 
-  //- Heavy Disc Launcher
-  function HeavyDiscLauncher::onMount(%player, %slot) {
-    Player::mountItem(%player, HeavyDiscLauncherLeftExtra, 4);
-    Player::mountItem(%player, HeavyDiscLauncherRightExtra, 6);
-  }
+  function DiscLauncher::onSynActivate(%player) {
+    error("Activate");
 
-  function HeavyDiscLauncherImage::onActivate(%player) {
     Player::trigger(%player, 4, true);
     Player::trigger(%player, 6, true);
   }
 
-  function HeavyDiscLauncherImage::onDeactivate(%player) {
+  function DiscLauncher::onSynDectivate(%player) {
+    error("Dectivate");
+
     Player::trigger(%player, 4, false);
     Player::trigger(%player, 6, false);
   }
 
-  function HeavyDiscLauncher::onUnmount(%player, %slot) {
+  function DiscLauncher::onUnmount(%player, %slot) {
+    Player::trigger(%player, 4, false);
+    Player::trigger(%player, 6, false);
+
+    Player::unmountItem(%player, $WeaponSlot);
     Player::unmountItem(%player, 4);
     Player::unmountItem(%player, 6);
-  }
-
-  function HeavyDiscLauncher::onDrop(%player, %item) {
-    %state = Player::getItemState(%player, $WeaponSlot);
-    %weapon = Player::getMountedItem(%this, $WeaponSlot);
-    
-    if(%state != "Fire" && %state != "Reload") {
-      Player::unmountItem(%player, $WeaponSlot);
-      Player::unmountItem(%player, 4);
-      Player::unmountItem(%player, 6);
-
-      Player::dropItem(%player, %weapon);
-
-      Item::onDrop(%player, %weapon);
-    }
-  }
+  } 
