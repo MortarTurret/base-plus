@@ -171,6 +171,8 @@ function Player::__updateAttrs(%this, %bypassCycle) {
   //- Local scope: Update trigger/fire/target (TFT) statuses -//
   //- ------------------------------------------------------ -//
   {
+    %previousValue = %this.__triggering;
+
     if(Player::isTriggered(%this, $WeaponSlot)) {
       if(%this.__alive) { 
         %this.__triggering = true;
@@ -195,6 +197,28 @@ function Player::__updateAttrs(%this, %bypassCycle) {
       %this.__firing = false;
       %this.__targeting = "";
       %this.__triggering = false;
+    }
+
+    //- Run weapon synthetic activate/deactivate scripts
+    //- ------------------------------------------------
+    //- NOTE: This is in a weird place, but it's more performant to put this 
+    //- here than it is to try and shoehorn it somewhere else in the loop
+    if(%previousValue != %this.__triggering) {
+      if(%this.__triggering) {
+        error("triggering");
+
+        if(isFunction(%this.__weapon @ "::onSynActivate")) {
+          error("schedule syn activate");
+
+          schedule(%this.__weapon @ "::onSynActivate(" @ %this @ ");", 0);
+        }
+      }
+
+      else {
+        if(isFunction(%this.__weapon @ "::onSynDectivate")) {
+          schedule(%this.__weapon @ "::onSynDectivate(" @ %this @ ");", 0);
+        }
+      }
     }
   }
 
@@ -393,7 +417,7 @@ function Player::__updateAttrs(%this, %bypassCycle) {
   //- ----------------------------------------- -//
   //- Method scope: Call method n times/second. -//
   //- ----------------------------------------- -//
-  schedule("Player::__updateAttrs(" @ %this @ ");", 0.1);
+  schedule("Player::__updateAttrs(" @ %this @ ");", 0.05);
 }
 //----------------------------------------------------------------------------//
 //----------------------------------------------------------------------------//
