@@ -159,8 +159,9 @@ ItemImageData DiscLauncherImage {
   accuFire = false;
   ammoType = DiscAmmo;
   fireTime = 0;
-  mountOffset = { 0, 0.08, -0.1 };
+  mountOffset = { 0, 0.05, -0.01 };
   mountPoint = 0;
+  mountRotation= { 0, 3.14, 0 };
   reloadTime = 0;
   sfxActivate = SoundPickUpWeapon;
   shapeFile = "paintgun";
@@ -180,40 +181,40 @@ ItemImageData LightDiscLauncherImage {
   sfxReload = SoundDiscReload;
   shapeFile = "disc";
   spinUpTime = 0.25;
-  weaponType = 3;
+  weaponType = DiscLauncherImage.weaponType;
 };
 
 ItemImageData HeavyDiscLauncherLeftImage {
   accuFire = false;
   ammoType = LightDiscLauncherImage.ammoType;
-  fireTime = LightDiscLauncherImage.fireTime;
+  fireTime = LightDiscLauncherImage.fireTime * 1.1;
   mountPoint = LightDiscLauncherImage.mountPoint;
   mountRotation = { 0, 1.21, 0 };
   projectileType = HeavyDiscShellLeft;
-  reloadTime = LightDiscLauncherImage.reloadTime;
+  reloadTime = LightDiscLauncherImage.reloadTime * 1.1;
   sfxActivate = SoundPickUpWeapon;
   sfxFire = LightDiscLauncherImage.sfxFire;
   sfxReady = LightDiscLauncherImage.sfxReady;
   sfxReload = LightDiscLauncherImage.sfxReload;
   shapeFile = LightDiscLauncherImage.shapeFile;
-  spinUpTime = LightDiscLauncherImage.spinUpTime;
+  spinUpTime = LightDiscLauncherImage.spinUpTime * 1.1;
   weaponType = LightDiscLauncherImage.weaponType;
 };
 
 ItemImageData HeavyDiscLauncherRightImage {
   accuFire = false;
-  ammoType = LightDiscLauncherImage.ammoType;
-  fireTime = LightDiscLauncherImage.fireTime;
-  mountPoint = LightDiscLauncherImage.mountPoint;
+  ammoType = HeavyDiscLauncherLeftImage.ammoType;
+  fireTime = HeavyDiscLauncherLeftImage.fireTime;
+  mountPoint = HeavyDiscLauncherLeftImage.mountPoint;
   mountRotation = { 0, -1.21, 0 };
   projectileType = HeavyDiscShellRight;
-  reloadTime = LightDiscLauncherImage.reloadTime;
-  sfxFire = LightDiscLauncherImage.sfxFire;
+  reloadTime = HeavyDiscLauncherLeftImage.reloadTime;
+  sfxFire = HeavyDiscLauncherLeftImage.sfxFire;
   sfxReady = SoundMortarIdle;
-  sfxReload = LightDiscLauncherImage.sfxReload;
-  shapeFile = LightDiscLauncherImage.shapeFile;
-  spinUpTime = LightDiscLauncherImage.spinUpTime;
-  weaponType = LightDiscLauncherImage.weaponType;
+  sfxReload = HeavyDiscLauncherLeftImage.sfxReload;
+  shapeFile = HeavyDiscLauncherLeftImage.shapeFile;
+  spinUpTime = HeavyDiscLauncherLeftImage.spinUpTime;
+  weaponType = HeavyDiscLauncherLeftImage.weaponType;
 };
 
 //--------------------------------------------------------------------------- //
@@ -231,7 +232,6 @@ ItemData DiscLauncher
   shapeFile = "disc";
   showWeaponBar = true;
 };
-
 
 ItemData LightDiscLauncher
 {
