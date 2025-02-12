@@ -58,7 +58,7 @@ TurretData RocketTurret
 	maxEnergy = 100;
 	minGunEnergy = 60;
 	maxGunEnergy = 60;
-	range = getVisibleRange(150);
+	range = getAVR();
 	gunRange = 300;
 	visibleToSensor = true;
 	dopplerVelocity = 0;

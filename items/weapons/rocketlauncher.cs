@@ -24,9 +24,9 @@ SeekingMissileData PersonnelMissile
   liveTime          = 6;
   mass            = 2.0;
   muzzleVelocity    = 85.0;
-  nonSeekingTurningRadius = getVisibleRange(150) / 2;
-  proximityDist     = getVisibleRange(150) / 25;
-  seekingTurningRadius    = getVisibleRange(150) / 10;
+  nonSeekingTurningRadius = getAVR() / 2;
+  proximityDist     = getAVR() / 25;
+  seekingTurningRadius    = getAVR() / 10;
   smokeDist         = 3.00;
   soundId = SoundJetLight;
   totalTime         = 6;
@@ -110,7 +110,7 @@ function RocketLauncher::onSynActivate(%player) {
   %ammo = Player::getItemCount(%player, $WeaponAmmo[Mortar]);
 
   if(%ammo) {
-    %lockDistance = getVisibleRange(150);
+    %lockDistance = getAVR();
 		%transform = GameBase::getMuzzleTransform(%player);
 		%velocity = Item::getVelocity(%player);
 

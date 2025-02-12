@@ -3,6 +3,10 @@ rundir( "server/math/" );
   run("getRangedRandom");
   run("toPrecision");
 
+rundir( "server/special/" );
+  run("getAVR");
+  run("getMVR");
+
 rundir( "server/" );
   run("command");
 

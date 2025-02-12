@@ -1,6 +1,7 @@
 // do stuff that defines datablocks we need for items
 rundir( "server/special/" );
-run("getVisibleRange");
+run("getAVR");
+run("getMVR");
 
 // do stuff that defines datablocks we need for items
 rundir( "server/items/" );
