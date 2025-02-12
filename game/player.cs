@@ -59,6 +59,8 @@ function Player::onAdd(%this) {
       %this.__lastTarget = 0.0;       // Float: Seconds since the Player last targeted
       %this.__lastTrigger = 0.0;      // Float: Seconds since the Player last triggered
       %this.__pack = "";              // String: Player's equipped pack
+      %this.__piloting = false;       // Boolean: True if player is currently piloting a vehicle
+      %this.__passenger = false;      // Boolean: True if player is currently a passenger in a vehicle
       %this.__targeting = "";         // String: ID of entity Player is currently targeting via ELF, Repair or TargetLaser
       %this.__targetingFor = 0.0;     // Float: How long the Player has been targeting for
       %this.__triggering = false;     // Boolean: True if the player is holding trigger
@@ -331,6 +333,16 @@ function Player::__updateAttrs(%this, %bypassCycle) {
     }
   }
 
+  //- ----------------------------------------------------------------- -//
+  //- Local scope: Update current piloting/passenger check for vehicles -//
+  //- ----------------------------------------------------------------- -//
+  //- NOTE: This is being set before the heatFactor check because this 
+  //- impacts a player's heat value for missile targeting purposes.
+  {
+    %this.__passenger = (!%this.driver && %this.vehicle) ? true : false;
+    %this.__piloting = (%this.driver) ? true : false;
+  }
+
   //- ------------------------------------------------------ -//
   //- Local scope: Update current heat factor (for missiles) -//
   //- ------------------------------------------------------ -//
@@ -341,20 +353,23 @@ function Player::__updateAttrs(%this, %bypassCycle) {
       //- Adjustable heat ramps based on equipped armor! This means 
       //- that light armors will heat up faster, but also cool down 
       //- faster and heavies heat up slower, but also stay hot longer.
-      //- ------------------------------------------------------------------
-      //- NOTE: The heatRate, coolRate and headIndex values should probably 
-      //- be moved into the armor scripts... but they're fine here, for now.
+      //- ----------------------------------------------------------------
+      //- NOTE: HeatFactor is hardcoded to 1 (maximum value) when piloting
 
-      %heatFactor = %this.__heat;
+      %heatFactor = 1;
 
-      %heatRate = (%this.__armor == "Light") ? 0.10 : 
-                  (%this.__armor == "Heavy") ? 0.06 : 0.08;
+      if(!%this.__piloting) {
+        %heatFactor = %this.__heat;
 
-      %coolRate = (%this.__armor == "Light") ? 0.030 : 
-                  (%this.__armor == "Heavy") ? 0.015 : 0.022;
+        %heatRate = (%this.__armor == "Light") ? 0.10 : 
+                    (%this.__armor == "Heavy") ? 0.06 : 0.08;
 
-      %heatFactor = (%this.__jetting) ? %heatFactor + %heatRate : %heatFactor - %coolRate;
-      %heatFactor = clamp(0, %heatFactor, 1);
+        %coolRate = (%this.__armor == "Light") ? 0.030 : 
+                    (%this.__armor == "Heavy") ? 0.015 : 0.022;
+
+        %heatFactor = (%this.__jetting) ? %heatFactor + %heatRate : %heatFactor - %coolRate;
+        %heatFactor = clamp(0, %heatFactor, 1);
+      }
 
       %this.__heat = %heatFactor;
     }
@@ -416,7 +431,10 @@ function Player::__updateAttrs(%this, %bypassCycle) {
   {
     %client = Player::getClient(%this);
 
-    message::topPrint( %client, "Heat: " @ %this.__heat @ "   " @ "Hot: " @ %this.__hot );
+    message::topPrint( %client, "  Heat: " @ %this.__heat @ 
+      "   " @ "Hot: " @ %this.__hot @ 
+      "   " @ "Piloting: " @ %this.__piloting @ 
+      "   " @ "Passenger: " @ %this.__passenger );
   }
 
   //- ----------------------------------------- -//

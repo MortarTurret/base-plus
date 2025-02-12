@@ -1,9 +1,4 @@
 // do stuff that defines datablocks we need for items
-rundir( "server/special/" );
-run("getAVR");
-run("getMVR");
-
-// do stuff that defines datablocks we need for items
 rundir( "server/items/" );
 run("damagetypes");
 run("shockwave");

@@ -1,6 +1,7 @@
 rundir( "server/math/" );
   run("ceil");
   run("getRangedRandom");
+  run("getRangedRoundedRandom");
   run("toPrecision");
 
 rundir( "server/special/" );
