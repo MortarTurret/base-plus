@@ -14,6 +14,7 @@ $PlayerAnim::DieBack = 37;
 
 //----------------------------------------------------------------------------
 $CorpseTimeoutValue = 22;
+$PlayerUpdateTickRate = 0.1;
 //----------------------------------------------------------------------------
 
 // Player & Armor data block callbacks
@@ -59,8 +60,11 @@ function Player::onAdd(%this) {
       %this.__lastTarget = 0.0;       // Float: Seconds since the Player last targeted
       %this.__lastTrigger = 0.0;      // Float: Seconds since the Player last triggered
       %this.__pack = "";              // String: Player's equipped pack
-      %this.__piloting = false;       // Boolean: True if player is currently piloting a vehicle
       %this.__passenger = false;      // Boolean: True if player is currently a passenger in a vehicle
+      %this.__piloting = false;       // Boolean: True if player is currently piloting a vehicle
+      %this.__regenerating = false;   // Boolean: True if the Player is actively regenerating
+      %this.__regenFor = 0.0;         // Float: How long the Player will regenerate for (counts down)
+      %this.__regenRate = 0.0;        // Float: Player's current passive health regeneration rate
       %this.__targeting = "";         // String: ID of entity Player is currently targeting via ELF, Repair or TargetLaser
       %this.__targetingFor = 0.0;     // Float: How long the Player has been targeting for
       %this.__triggering = false;     // Boolean: True if the player is holding trigger
@@ -86,7 +90,7 @@ function Player::__updateAttrs(%this, %bypassCycle) {
     //- NOTE: This helps eliminate unwanted behavior from certain built-in 
     //- methods due to how Dynamix decided to code them.  
     if(!$matchStarted) {
-      schedule("Player::__updateAttrs(" @ %this @ ");", 0.1);
+      schedule("Player::__updateAttrs(" @ %this @ ");", $PlayerUpdateTickRate);
 
       return;
     }
@@ -119,13 +123,88 @@ function Player::__updateAttrs(%this, %bypassCycle) {
   //- Local scope: Update health and energy -//
   //- ------------------------------------- -//
   {
-    %diff = GameBase::getDataName(%this).maxDamage - GameBase::getDamageLevel(%this);
-    %diff = round(%diff * 100);
-    %this.__health = (%this.__alive) ? %diff : 0;
+    //- Health 
+    //- ------
+    {
+      %diff = GameBase::getDataName(%this).maxDamage - GameBase::getDamageLevel(%this);
+      %diff = round((%diff / GameBase::getDataName(%this).maxDamage) * 100);
+      %this.__health = (%this.__alive) ? %diff : 0;
+    }
 
-    %diff = GameBase::getEnergy(%this) / GameBase::getDataName(%this).maxEnergy;
-    %diff = round(%diff * 100);
-    %this.__energy = (%this.__alive) ? %diff : 0;
+    //- Energy 
+    //- ------
+    {
+      %diff = GameBase::getEnergy(%this) / GameBase::getDataName(%this).maxEnergy;
+      %diff = round((%diff / GameBase::getDataName(%this).maxEnergy) * 100);
+      %this.__energy = (%this.__alive) ? %diff : 0;
+    }
+  }
+
+  //- --------------------------------------------------------------------- -//
+  //- Local scope: Execute passive regeneration                             -//
+  //- --------------------------------------------------------------------- -//
+  {
+    %currentRepairRate = GameBase::getAutoRepairRate(%this);
+
+    if(%this.__health < 50) {
+      if(%this.__lastDamaged > 10) {
+        if(!%this.__regenerating && !%this.__regenDone) {
+          %this.__regenerating = true;
+          %this.__regenFor = 5;
+        }
+      }
+
+      else {
+        %this.__regenerating = false;
+        %this.__regenDone = false;
+        %this.__regenFor = 0;
+      }
+
+      if(%this.__regenerating) {
+        if(%this.__health >= 50) {
+          %newRegenRate = 0;
+          %this.__regenerating = false;
+          %this.__regenDone = true;
+        }
+
+        else {
+          %newRegenRate = 0.03;
+          %this.__regenFor -= 0.1;
+
+          if (%this.__regenFor <= 0) {
+            %this.__regenerating = false;
+            %this.__regenDone = true;
+            %newRegenRate = 0;
+          }
+        }
+      }
+
+      else {
+         %newRegenRate = 0;
+      }
+      
+      if(%newRegenRate != %currentRepairRate) {
+        GameBase::setAutoRepairRate(%this, %newRegenRate);
+      }
+    }
+
+    else {
+      %this.__regenerating = false;
+
+      if (%currentRepairRate != 0) {
+        GameBase::setAutoRepairRate(%this, 0);
+      }
+    }
+  }
+
+  //- -------------------------------------- -//
+  //- Local scope: Update last damaged check -//
+  //- -------------------------------------- -//
+  {  
+    //- NOTE: It's not strictly necessary to run toPrecision for this, but it 
+    //- makes the result much prettier and easier to deal with if it ever needs 
+    //- to be put into a GUI element for some reason 
+    %this.__lastDamaged = %this.__lastDamaged + $PlayerUpdateTickRate;
   }
   
   //- ----------------------------------- -//
@@ -425,16 +504,33 @@ function Player::__updateAttrs(%this, %bypassCycle) {
     }
   }
 
+  //- ------------------------------------------------------------------ -//
+  //- Local scope: Execute whileMounted functions for weapons and packs  -//
+  //- ------------------------------------------------------------------ -//
+  {
+    if(isFunction(%this.__weapon @ "::whileMounted")) {
+      schedule(%this.__weapon @ "::whileMounted(" @ %this @ "," @ %this.__weapon @ ");", 0);
+    }
+
+    if(isFunction(%this.__pack @ "::whileMounted")) {
+      schedule(%this.__pack @ "::whileMounted(" @ %this @ "," @ %this.__pack @ ");", 0);
+    }
+  }
+
   //- ------------------------ -//
   //- Method scope: Debugging. -//
   //- ------------------------ -//
-  {
+  { /*
     %client = Player::getClient(%this);
 
-    message::topPrint( %client, "  Heat: " @ %this.__heat @ 
-      "   " @ "Hot: " @ %this.__hot @ 
-      "   " @ "Piloting: " @ %this.__piloting @ 
-      "   " @ "Passenger: " @ %this.__passenger );
+    message::topPrint( %client, "" @ 
+    "    " @ "Health: " @ %this.__health @ 
+    "    " @ "Last Damaged: " @ %this.__lastDamaged @ 
+    "    " @ "Regen Rate: " @ %this.__regenRate @ 
+    "    " @ "Regen For: " @ %this.__regenFor @ 
+    "    " @ "AutoRep Rate: " @ GameBase::getAutoRepairRate(%this) @ 
+    "    " @ "Regenerating: " @ %this.__regenerating @ 
+    ""); */
   }
 
   //- ----------------------------------------- -//
@@ -444,9 +540,6 @@ function Player::__updateAttrs(%this, %bypassCycle) {
 }
 //----------------------------------------------------------------------------//
 //----------------------------------------------------------------------------//
-
-
-
 
 function Player::onRemove(%this) {
 	// Drop anything left at the players pos
@@ -535,6 +628,7 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 				%this.DamageStamp = %curTime;
 			}
 		}
+
 		%friendFire = $Server::TeamDamageScale;
 	}
   
@@ -546,7 +640,7 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 		%friendFire = 1.0;	
 	}
 
-	if (!Player::isDead(%this)) {
+	if(!Player::isDead(%this)) {
 		%armor = Player::getArmor(%this);
 
 		//More damage applyed to head shots
@@ -564,16 +658,21 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 		if (%type != -1 && %this.shieldStrength) {
 			%energy = GameBase::getEnergy(%this);
 			%strength = %this.shieldStrength;
+
 			if (%type == $GrenadeDamageType || %type == $MortarDamageType)
 				%strength *= 0.75;
+
 			%absorb = %energy * %strength;
+
 			if (%value < %absorb) {
 				GameBase::setEnergy(%this,%energy - ((%value / %strength)*%friendFire));
 				%thisPos = getBoxCenter(%this);
 				%offsetZ =((getWord(%pos,2))-(getWord(%thisPos,2)));
 				GameBase::activateShield(%this,%vec,%offsetZ);
 				%value = 0;
-			} else {
+			}
+      
+      else {
 				GameBase::setEnergy(%this,0);
 				%value = %value - %absorb;
 			}
@@ -599,8 +698,10 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 			%dlevel = GameBase::getDamageLevel(%this) + %value;
 			%spillOver = %dlevel - %armor.maxDamage;
 			%flash = Player::getDamageFlash(%this) + %value * 2;
+
 			if (%flash > 0.75) 
 				%flash = 0.75;
+
 			Player::setDamageFlash(%this,%flash);
 			
 			if ( %shooterName != "" )
@@ -616,10 +717,14 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 			if(!Player::isDead(%this)) { 
 				if(%damagedClient.lastDamage < getSimTime()) {
 					%sound = randomItems(3,injure1,injure2,injure3);
+
 					playVoice(%damagedClient,%sound);
+
 					%damagedClient.lastdamage = getSimTime() + 1.5;
 				}
-			} else {
+			}
+      
+      else {
 				if((%spillOver > 0.5 && (%type == $DiscDamageType || %type == $GrenadeDamageType || %type== $MortarDamageType|| %type == $RocketDamageType)) || (%this.__heat >= 1 && %type == $PlasmaDamageType)) {
 					Player::trigger(%this, $WeaponSlot, false);
 					%weaponType = Player::getMountedItem(%this,$WeaponSlot);
@@ -665,6 +770,8 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 				if(%type == $ImpactDamageType && %object.clLastMount != "")  
 					%shooterClient = %object.clLastMount;
 			}
+      
+      %this.__lastDamaged = 0;
 		}
 	}
 }

@@ -23,6 +23,22 @@ ExplosionData blasterExp {
   timeZero = 0.450;
 };
 
+ExplosionData criticalBlasterExp {
+   colors[0]  = { 0.25, 0.25, 1.0 };
+   colors[1]  = { 0.25, 0.25, 1.0 };
+   colors[2]  = { 1.0, 1.0, 1.0 };
+   faceCamera = true;
+   hasLight   = true;
+   lightRange = 3.0;
+   radFactors = { 1.0, 1.0, 1.0 };
+   randomSpin = true;
+   shapeName = "fusionex.dts";
+   shiftPosition = True;
+   soundId   = turretExplosion;
+   timeOne  = 0.750;
+   timeZero = 0.450;
+};
+
 //--------------------------------------------------------------------------- //
 //- Projectile defs                                                           //
 //--------------------------------------------------------------------------- //
@@ -49,18 +65,40 @@ RocketData BlasterBolt {
   trailWidth          = 0.3;
 };
 
+RocketData CriticalBlasterBolt {
+  acceleration        = BlasterBolt.acceleration;
+  bulletShapeName     = BlasterBolt.bulletShapeName;
+  collisionRadius     = BlasterBolt.collisionRadius;
+  damageClass         = 1;
+  damageType          = $BlasterDamageType;
+  damageValue         = BlasterBolt.damageValue * 3;
+  explosionRadius     = BlasterBolt.explosionRadius * 10;
+  explosionTag        = criticalBlasterExp;
+  inheritedVelocityScale = BlasterBolt.inheritedVelocityScale;
+  kickBackStrength    = BlasterBolt.kickBackStrength * 1.5;
+  lightColor          = BlasterBolt.lightColor;
+  lightRange          = BlasterBolt.lightRange * 3;
+  liveTime            = BlasterBolt.liveTime;
+  mass                = BlasterBolt.mass;
+  muzzleVelocity      = BlasterBolt.muzzleVelocity;
+  terminalVelocity    = BlasterBolt.terminalVelocity;
+  totalTime           = BlasterBolt.totalTime;
+  trailLength         = BlasterBolt.trailLength;
+  trailType           = BlasterBolt.trailType;
+  trailWidth          = BlasterBolt.trailWidth;
+};
+
 //--------------------------------------------------------------------------- //
 //- Image defs                                                                //
 //--------------------------------------------------------------------------- //
 ItemImageData BlasterImage {
   shapeFile  = "energygun";
   mountPoint = 0;
-  weaponType = 0; // Single Shot
+  weaponType = 0;
   reloadTime = 0;
   fireTime = 0.3;
   minEnergy = 5;
-  maxEnergy = 6;
-  projectileType = BlasterBolt;
+  maxEnergy = 6; // unused
   accuFire = true;
   sfxFire = SoundFireBlaster;
   sfxActivate = SoundPickUpWeapon;
@@ -80,3 +118,26 @@ ItemData Blaster {
   price = 85;
   showWeaponBar = true;
 };
+
+//--------------------------------------------------------------------------- //
+//- Callback event methods                                                    //
+//--------------------------------------------------------------------------- //
+function BlasterImage::onFire(%player, %slot) {
+  %energy = GameBase::getEnergy(%player);
+  %muzzle = GameBase::getMuzzleTransform(%player);
+  %velocity = Item::getVelocity(%player);
+
+  %criticalBound = 100;
+  %criticalChance = getRangedRoundedRandom(0, %criticalBound + 1);
+
+  error( %criticalBound @ " : " @ %criticalChance );
+
+  if(%energy >= BlasterImage.minEnergy) {
+    GameBase::setEnergy(%player, %energy - BlasterImage.minEnergy);
+    Projectile::spawnProjectile((%criticalChance == %criticalBound) ? "CriticalBlasterBolt" : "BlasterBolt", %muzzle, %player, %velocity, $los::object);
+  }
+
+  else {
+    Player::trigger(%player, $WeaponSlot, false);
+  }
+}
