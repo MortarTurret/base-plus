@@ -54,6 +54,7 @@ function Player::onAdd(%this) {
       %this.__jetting = false;        // Boolean: True if Player is currently jetting
       %this.__jettingFor = 0.0;       // Float: How long the Player has been jetting for
       %this.__lastDamaged = 0.0;      // Float: Seconds since the Player was last damaged 
+      %this.__lastDamagedBy = "";     // String: ID of entity that last damaged the player
       %this.__lastFire = 0.0;         // Float: Seconds since the Player last fired
       %this.__lastHot = 0.0;          // Float: Seconds since the Player was last hot
       %this.__lastJet = 0.0;          // Float: Seconds since the Player last jetted
@@ -65,7 +66,7 @@ function Player::onAdd(%this) {
       %this.__regenerating = false;   // Boolean: True if the Player is actively regenerating
       %this.__regenFor = 0.0;         // Float: How long the Player will regenerate for (counts down)
       %this.__regenRate = 0.0;        // Float: Player's current passive health regeneration rate
-      %this.__targeting = "";         // String: ID of entity Player is currently targeting via ELF, Repair or TargetLaser
+      %this.__targeting = "";         // String: ID of entity Player is currently targeting via ELF or RepairGun
       %this.__targetingFor = 0.0;     // Float: How long the Player has been targeting for
       %this.__triggering = false;     // Boolean: True if the player is holding trigger
       %this.__triggeringFor = 0.0;    // Float: How long the player has been holding trigger
@@ -145,12 +146,17 @@ function Player::__updateAttrs(%this, %bypassCycle) {
   //- --------------------------------------------------------------------- -//
   {
     %currentRepairRate = GameBase::getAutoRepairRate(%this);
+    %defaultRegenTime = 5;
+    %defaultRegenWarmup = 15;
 
     if(%this.__health < 50) {
-      if(%this.__lastDamaged > 10) {
+      %worldDamage = %this.__lastDamaged > (%defaultRegenWarmup * 0.6) && %this.__lastDamagedBy == -1;
+      %notSelfDamage = %this.__lastDamaged > %defaultRegenWarmup && %this.__lastDamagedBy != %this;
+
+      if(%worldDamage || %notSelfDamage) {
         if(!%this.__regenerating && !%this.__regenDone) {
           %this.__regenerating = true;
-          %this.__regenFor = 5;
+          %this.__regenFor = %defaultRegenTime;
         }
       }
 
@@ -165,31 +171,34 @@ function Player::__updateAttrs(%this, %bypassCycle) {
           %newRegenRate = 0;
           %this.__regenerating = false;
           %this.__regenDone = true;
+          %this.__regenFor = 0;
         }
 
         else {
-          %newRegenRate = 0.03;
+          %newRegenRate = 0.035;
           %this.__regenFor -= 0.1;
 
           if (%this.__regenFor <= 0) {
             %this.__regenerating = false;
             %this.__regenDone = true;
             %newRegenRate = 0;
+            %this.__regenFor = 0;
           }
         }
       }
 
       else {
-         %newRegenRate = 0;
+        %newRegenRate = 0;
       }
       
-      if(%newRegenRate != %currentRepairRate) {
+      if (%newRegenRate != %currentRepairRate) {
         GameBase::setAutoRepairRate(%this, %newRegenRate);
       }
     }
 
     else {
       %this.__regenerating = false;
+      %this.__regenFor = 0;
 
       if (%currentRepairRate != 0) {
         GameBase::setAutoRepairRate(%this, 0);
@@ -520,12 +529,14 @@ function Player::__updateAttrs(%this, %bypassCycle) {
   //- ------------------------ -//
   //- Method scope: Debugging. -//
   //- ------------------------ -//
-  { /*
-    %client = Player::getClient(%this);
+  {
+    /* %client = Player::getClient(%this);
 
     message::topPrint( %client, "" @ 
+    "    " @ "ID: " @ %this @ 
     "    " @ "Health: " @ %this.__health @ 
     "    " @ "Last Damaged: " @ %this.__lastDamaged @ 
+    "    " @ "Last Damaged By: " @ %this.__lastDamagedBy @ 
     "    " @ "Regen Rate: " @ %this.__regenRate @ 
     "    " @ "Regen For: " @ %this.__regenFor @ 
     "    " @ "AutoRep Rate: " @ GameBase::getAutoRepairRate(%this) @ 
@@ -602,9 +613,6 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 	if ( !Player::isExposed(%this) )
 		return;
 
-  // error(%vertPos);
-  // error(%quadrant);
-
 	%damagedClient = Player::getClient(%this);
 	%shooterClient = %object;
 	%shooterName = Client::getName( %shooterClient );
@@ -679,6 +687,8 @@ function Player::onDamage( %this, %type, %value, %pos, %vec, %mom, %vertPos, %qu
 		}
 
     else {
+      %this.__lastDamagedBy = (%type == $CrushDamageType || %type == $LandingDamageType || %type == $DebrisDamageType) ? -1 : Client::getOwnedObject(%object);
+
       if(%type == $PlasmaDamageType) {
         //- Plasma Damage now increases the heatFactor on players it hits.
         %this.__heat = clamp(0, %this.__heat + 0.1 * (%this.__heat + 1), 1);
