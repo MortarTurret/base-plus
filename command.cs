@@ -65,14 +65,14 @@ function Client::takeControl(%clientId, %objectId) {
   {
     if(%objectId.__hotwired) 
 		{
-      Client::SendMessage(%clientId, 0, "Command Link Failed: Turret " @ %objectId @ " operating under low power.");
+      Client::SendMessage(%clientId, 1, "Command Link Failed: Turret " @ %objectId @ " operating under low power.");
 
       return;
 		}
 
     else if(!GameBase::isPowered(%objectId)) 
 		{
-      Client::SendMessage(%clientId, 0, "Command Link Failed: Turret " @ %objectId @ " is offline.");
+      Client::SendMessage(%clientId, 1, "Command Link Failed: Turret " @ %objectId @ " is offline.");
 
       return;
 		}
@@ -80,7 +80,7 @@ function Client::takeControl(%clientId, %objectId) {
   
   if(!CommandPack::IsAvailable(%player)) {
     if(!(Client::getOwnedObject(%clientId)).CommandTag && GameBase::getDataName(%objectId) != CameraTurret && !$TestCheats) {
-      Client::SendMessage(%clientId,0, "Command Link Failed: Operator \"" @ %playerName @ "::" @ %clientId @ "\" unauthorized.");
+      Client::SendMessage(%clientId, 1, "Command Link Failed: Operator \"" @ %playerName @ "::" @ %clientId @ "\" unauthorized.");
 
       return;
     }

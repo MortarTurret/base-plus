@@ -45,12 +45,12 @@ ItemImageData RocketLauncherImage
   mountRotation= { 0, 3.14, 0 };
   reloadTime = 0;
   sfxActivate = SoundPickUpWeapon;
-  shapeFile = "paintgun";
+  shapeFile = "breath";
   spinUpTime = 0;
   weaponType = 0;
 };
 
-ItemImageData RocketLauncherGhostImage {
+ItemImageData RocketLauncherChassisImage {
   accuFire = false;
   ammoType = RocketLauncherImage.ammoType;
   fireTime = 3.0;
@@ -58,14 +58,50 @@ ItemImageData RocketLauncherGhostImage {
   lightRadius = 3;
   lightTime = 1;
   lightType = 3;
+  mountOffset = { 0, -0.5, 0 };
   mountPoint = 0;
-  mountRotation = { 0, 3.14, 0 };
+  mountRotation = { 0, -1.57, -1.57 };
   reloadTime = 1.25;
   sfxFire = SoundFireMortar;
   sfxReady = SoundMortarIdle;
   sfxReload = SoundMortarReload;
-  shapeFile = "mortargun";
+  shapeFile = "invent_remote";
   weaponType = 0;
+};
+
+ItemImageData RocketLauncherExtraImage {
+  accuFire = false;
+  ammoType = RocketLauncherImage.ammoType;
+  fireTime = 3.0;
+  lightColor = { 0.6, 1, 1.0 };
+  lightRadius = 3;
+  lightTime = 1;
+  lightType = 3;
+  mountOffset = { 0.07, 0.05, 0.01 };
+  mountPoint = 0;
+  mountRotation = { 1.37, -1.57, 0 };
+  reloadTime = 1.25;
+  shapeFile = "discammo";
+  weaponType = 0;
+};
+
+ItemImageData RocketLauncherGoLightImage {
+	maxEnergy = 0;
+	minEnergy = 0;
+	reloadTime = 1.0;
+	sfxFire = SoundUseAmmoStation;
+  accuFire = false;
+  ammoType = RocketLauncherImage.ammoType;
+  fireTime = 3.0;
+  lightColor = { 0.6, 1, 1.0 };
+  lightRadius = 3;
+  lightTime = 1;
+  lightType = 3;
+  mountOffset = { 0, -0.15, 0.1 };
+  mountPoint = 0;
+  mountRotation = { 1.14, 0, 3.14 };
+  shapeFile = "paintgun";
+  weaponType = 2;
 };
 
 //--------------------------------------------------------------------------- //
@@ -84,13 +120,41 @@ ItemData RocketLauncher
   showWeaponBar = true;
 };
 
-ItemData RocketLauncherGhost
+ItemData RocketLauncherChassis
 {
   className = RocketLauncher.className;
   description = RocketLauncher.description;
   heading = RocketLauncher.heading;
   hudIcon = RocketLauncher.hudIcon;
-  imageType = RocketLauncherGhostImage;
+  imageType = RocketLauncherChassisImage;
+  price = 0;
+  shadowDetailMask = RocketLauncher.shadowDetailMask;
+  shapeFile = RocketLauncher.shapeFile;
+  showInventory = false;
+  showWeaponBar = false;
+};
+
+ItemData RocketLauncherExtra
+{
+  className = RocketLauncher.className;
+  description = RocketLauncher.description;
+  heading = RocketLauncher.heading;
+  hudIcon = RocketLauncher.hudIcon;
+  imageType = RocketLauncherExtraImage;
+  price = 0;
+  shadowDetailMask = RocketLauncher.shadowDetailMask;
+  shapeFile = RocketLauncher.shapeFile;
+  showInventory = false;
+  showWeaponBar = false;
+};
+
+ItemData RocketLauncherGoLight
+{
+  className = RocketLauncher.className;
+  description = RocketLauncher.description;
+  heading = RocketLauncher.heading;
+  hudIcon = RocketLauncher.hudIcon;
+  imageType = RocketLauncherGoLightImage;
   price = 0;
   shadowDetailMask = RocketLauncher.shadowDetailMask;
   shapeFile = RocketLauncher.shapeFile;
@@ -103,51 +167,93 @@ ItemData RocketLauncherGhost
 //--------------------------------------------------------------------------- //
 function RocketLauncher::onMount(%player, %slot) {
   Player::mountItem(%player, RocketLauncher, $WeaponSlot);
-  Player::mountItem(%player, RocketLauncherGhost, 4);
+  Player::mountItem(%player, RocketLauncherChassis, 4);
+  Player::mountItem(%player, RocketLauncherGoLight, 5);
+  Player::mountItem(%player, RocketLauncherExtra, 6);
+}
+
+function RocketLauncher::whileMounted(%player, %slot) {  
+  %lockDistance = getAVR();
+  
+  if(GameBase::getLOSInfo(%player, %lockDistance)) {
+    %type = getObjectType($los::object);
+
+    if(%type == "Player" || %type == "Flier" || %type == "Turret") {
+      if(!Player::isTriggered(%player, 5)) {
+        error("LOCK " @ %type);
+
+        Player::trigger(%player, 5, true);
+      }
+		}
+
+    else {
+      if(Player::isTriggered(%player, 5)) {
+        error("FAIL " @ %type);
+
+        Player::trigger(%player, 5, false);
+      }
+		}
+  }
 }
 
 function RocketLauncher::onSynActivate(%player) {
-  %ammo = Player::getItemCount(%player, $WeaponAmmo[Mortar]);
+  %ammo = Player::getItemCount(%player, $WeaponAmmo[Mortar]);  
+  %client = Player::getClient(%player);
 
   if(%ammo) {
     %lockDistance = getAVR();
 		%transform = GameBase::getMuzzleTransform(%player);
 		%velocity = Item::getVelocity(%player);
 
-    if(GameBase::getLOSInfo(%player, %lockDistance)) {     
+    if(GameBase::getLOSInfo(%player, %lockDistance)) {
 			%type = getObjectType($los::object);
-			%targeted = GameBase::getOwnerClient($los::object);
-
-      error(%type);
 
 			if(%type == "Player" || %type == "Flier") {
         Player::trigger(%player, 4, true);
+        Player::trigger(%player, 6, true);
 				Player::decItemCount(%player,$WeaponAmmo[Mortar], 1);
 
-        playSound(mine_act, GameBase::getPosition(%player), 0);
-
         Projectile::spawnProjectile("PersonnelMissile", %transform, %player, %velocity, $los::object); 
+ 
         Player::trigger(%player, 4, false);
+        Player::trigger(%player, 5, false);
+        Player::trigger(%player, 6, false);
+
+        GameBase::playSound(mine_act, GameBase::getPosition(%player), 0);
+        Client::sendMessage(%client, 0, "Invalid target.");
 			}
 
 			else {
         GameBase::playSound(%player, SoundPackFail, 0);
+        Client::sendMessage(%client, 1, "Invalid target.");
 			}
 		}
 
 		else {
       GameBase::playSound(%player, SoundPackFail, 0);
+      Client::sendMessage(%client, 1, "No target.");
 		} 
   }
+
+  else {
+    GameBase::playSound(%player, SoundPackFail, 0);
+    Client::sendMessage(%client, 1, "Ammunition depleted.");
+  } 
 }
 
 function RocketLauncher::onSynDectivate(%player) {
   Player::trigger(%player, 4, false);
+  Player::trigger(%player, 5, false);
+  Player::trigger(%player, 6, false);
 }
 
 function RocketLauncher::onUnmount(%player, %slot) {
   Player::trigger(%player, 4, false);
+  Player::trigger(%player, 5, false);
+  Player::trigger(%player, 6, false);
 
   Player::unmountItem(%player, $WeaponSlot);
   Player::unmountItem(%player, 4);
+  Player::unmountItem(%player, 5);
+  Player::unmountItem(%player, 6);
 } 

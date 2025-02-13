@@ -159,12 +159,12 @@ ItemImageData DiscLauncherImage {
   accuFire = false;
   ammoType = DiscAmmo;
   fireTime = 0;
-  mountOffset = { 0, 0.05, -0.01 };
+  mountOffset = { 0, 0, 0 };
   mountPoint = 0;
-  mountRotation= { 0, 3.14, 0 };
+  mountRotation= { 0, 0, 0 };
   reloadTime = 0;
   sfxActivate = SoundPickUpWeapon;
-  shapeFile = "paintgun";
+  shapeFile = "breath";
   spinUpTime = 0;
   weaponType = 3;
 };
